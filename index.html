@@ -107,13 +107,12 @@
             border: 1px solid #fde68a;
         }
 
-        /* กล่องสภาพอากาศสด Real-time รายชั่วโมง */
+        /* กล่องสภาพอากาศสด Real-time */
         .weather-widget-container { 
             margin-bottom: 20px; 
             border-radius: 16px; 
             overflow: hidden; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-            background: #0077b6;
         }
 
         .alert-box { 
@@ -210,9 +209,12 @@
         </span>
     </div>
     
-    <!-- สภาพอากาศสด Real-time รายชั่วโมง ครอบคลุม จ.ราชบุรี -->
+    <!-- สภาพอากาศสด Real-time รายชั่วโมง จ.ราชบุรี -->
     <div class="weather-widget-container">
-        <iframe src="https://www.meteoblue.com/th/weather/widget/hourly/ratchaburi_%e0%b9%84%e0%b8%97%e0%b8%a2_1151253?geoloc=fixed&nocurrent=0&noforecast=0&days=1&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=monochrome" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 260px; border: none;"></iframe>
+        <a class="weatherwidget-io" href="https://forecast7.com/th/13p5399p81/ratchaburi/" data-label_1="ราชบุรี" data-label_2="สภาพอากาศรายชั่วโมง" data-font="Prompt" data-icons="Climacons Animated" data-theme="pure" data-basecolor="#023e8a" data-accent="#00b4d8" data-textcolor="#ffffff">ราชบุรี สภาพอากาศ</a>
+        <script>
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+        </script>
     </div>
 
     <div class="alert-box">
