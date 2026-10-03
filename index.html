@@ -26,12 +26,15 @@
 
         .container { max-width: 900px; margin: auto; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         h1 { color: var(--header-color); margin: 0; font-size: 1.4em; }
         
         /* ปุ่ม Dark Mode */
-        .theme-btn { background: #62b6cb; color: white; border: none; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .theme-btn { background: #62b6cb; color: white; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; }
         
+        /* ข้อ 2: สถานะเตือนภัยภาพรวม */
+        .status-badge { display: inline-block; background-color: #ffe169; color: #856404; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9em; margin-bottom: 15px; }
+
         /* กล่องสภาพอากาศสด Real-time */
         .weather-widget-container { margin-bottom: 20px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
@@ -51,13 +54,8 @@
         .map-container { width: 100%; height: 350px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
         .map-container iframe { width: 100%; height: 100%; border: 0; }
 
-        /* เบอร์โทรฉุกเฉิน */
-        .emergency-section { margin-top: 30px; padding: 20px; background-color: rgba(217, 4, 41, 0.05); border-radius: 10px; border: 1px solid #f5c6cb; }
-        .emergency-section h2 { color: #d90429; margin-top: 0; text-align: center; }
-        .phone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
-        .phone-card { background: var(--card-bg); padding: 12px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); }
-        .phone-card span { font-size: 0.95em; }
-        .phone-btn { background-color: #d90429; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.9em; }
+        /* ข้อ 3: Footer แสดงเวลาอัปเดต */
+        .footer-info { text-align: center; font-size: 0.85em; color: #777; margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px; }
     </style>
 </head>
 <body>
@@ -67,11 +65,16 @@
         <h1>🌊 รายงานสถานการณ์น้ำ จ.ราชบุรี</h1>
         <button class="theme-btn" onclick="toggleDarkMode()">🌙 โหมดมืด</button>
     </div>
+
+    <!-- ข้อ 2: แถบสถานะเตือนภัยภาพรวม -->
+    <div>
+        <span class="status-badge">🟡 สถานะปัจจุบัน: เฝ้าระวังระดับน้ำขังสะสม</span>
+    </div>
     
-    <!-- กล่องสภาพอากาศสด Real-time (อัปเดตใหม่) -->
-<div class="weather-widget-container">
-    <iframe src="https://www.meteoblue.com/th/weather/widget/three/ratchaburi_%e0%b9%84%e0%b8%97%e0%b8%a2_1151253?geoloc=fixed&nocurrent=0&noforecast=0&days=3&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=monochrome"  frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 210px; border: none; border-radius: 10px;"></iframe>
-</div>
+    <!-- สภาพอากาศสด Real-time -->
+    <div class="weather-widget-container">
+        <iframe src="https://www.meteoblue.com/th/weather/widget/three/ratchaburi_%e0%b9%84%e0%b8%97%e0%b8%a2_1151253?geoloc=fixed&nocurrent=0&noforecast=0&days=3&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=monochrome" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 210px; border: none; border-radius: 10px;"></iframe>
+    </div>
 
     <div class="alert-box">
         ⚠️ <strong>แจ้งเตือน:</strong> พื้นที่ลุ่มต่ำริมแม่น้ำแม่กลองและพื้นที่เชิงเขา ให้เฝ้าระวังระดับน้ำอย่างใกล้ชิด
@@ -159,26 +162,9 @@
         </div>
     </div>
 
-    <div class="emergency-section">
-        <h2>📞 รวมเบอร์ฉุกเฉินช่วยเหลือกรณีน้ำท่วม</h2>
-        <div class="phone-grid">
-            <div class="phone-card">
-                <span>ศูนย์ปฏิบัติการช่วยเหลือฯ (ศปภ.)</span>
-                <a href="tel:1111" class="phone-btn">📞 1111 กด 5</a>
-            </div>
-            <div class="phone-card">
-                <span>กรมป้องกันและบรรเทาสาธารณภัย (ปภ.)</span>
-                <a href="tel:1784" class="phone-btn">📞 1784</a>
-            </div>
-            <div class="phone-card">
-                <span>บริการการแพทย์ฉุกเฉินแห่งชาติ (กู้ชีพ)</span>
-                <a href="tel:1669" class="phone-btn">📞 1669</a>
-            </div>
-            <div class="phone-card">
-                <span>ศูนย์ความปลอดภัย กรมทางหลวงชนบท</span>
-                <a href="tel:1146" class="phone-btn">📞 1146</a>
-            </div>
-        </div>
+    <!-- ข้อ 3: ตัวนับเวลาอัปเดตล่าสุด -->
+    <div class="footer-info">
+        <p>อัปเดตข้อมูลล่าสุด: <span id="lastUpdated"></span> | ศูนย์ติดตามสถานการณ์น้ำจังหวัดราชบุรี</p>
     </div>
 </div>
 
@@ -201,6 +187,11 @@ function toggleDarkMode() {
         btn.innerText = "🌙 โหมดมืด";
     }
 }
+
+// แสดงวันที่และเวลาอัปเดตปัจจุบันอัตโนมัติ
+document.getElementById("lastUpdated").innerText = new Date().toLocaleDateString('th-TH', {
+    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+}) + ' น.';
 </script>
 
 </body>
