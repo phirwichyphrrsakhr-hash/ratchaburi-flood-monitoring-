@@ -3,210 +3,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบแจ้งเตือนภัย & ปักหมุดระดับน้ำ จ.ราชบุรี</title>
+  <title>ศูนย์ข้อมูลภัยพิบัติ จ.ราชบุรี</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Leaflet CSS & JS (แผนที่ Interactive) -->
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-10">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-12">
 
   <!-- Header -->
-  <header class="bg-sky-700 text-white shadow-lg sticky top-0 z-40">
-    <div class="max-w-xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <i data-lucide="map-pin" class="w-6 h-6 text-amber-300"></i>
+  <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2.5">
+        <div class="bg-sky-600 text-white p-2 rounded-2xl shadow-sky-200 shadow-md">
+          <i data-lucide="droplet" class="w-5 h-5"></i>
+        </div>
         <div>
-          <h1 class="font-bold text-base leading-tight">ศูนย์ข้อมูลภัยพิบัติ จ.ราชบุรี</h1>
-          <p class="text-[11px] text-sky-200">Ratchaburi Water & Disaster Monitoring</p>
+          <h1 class="font-bold text-slate-900 text-base leading-tight">ศูนย์ภัยพิบัติ จ.ราชบุรี</h1>
+          <p class="text-[11px] text-slate-400">Ratchaburi Water & Disaster Monitoring</p>
         </div>
       </div>
+
       <!-- แท็บสลับหน้า -->
-      <div class="flex bg-sky-800/80 p-1 rounded-xl text-xs">
-        <button id="btn-tab-main" onclick="switchPage('main')" class="px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition">หน้าหลัก</button>
-        <button id="btn-tab-add" onclick="switchPage('add')" class="px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition">+ ปักหมุด</button>
+      <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-semibold">
+        <button id="btn-tab-main" onclick="switchPage('main')" class="px-3.5 py-1.5 rounded-xl bg-white text-sky-700 shadow-sm transition">หน้าหลัก</button>
+        <button id="btn-tab-add" onclick="switchPage('add')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition">+ ปักหมุด</button>
       </div>
     </div>
   </header>
 
-  <div class="max-w-xl mx-auto px-4 mt-4 space-y-4">
+  <div class="max-w-3xl mx-auto px-4 mt-4 space-y-5">
 
     <!-- ================================================================= -->
     <!-- PAGE 1: หน้าหลัก (MAIN PAGE) -->
     <!-- ================================================================= -->
-    <div id="page-main" class="space-y-4">
+    <div id="page-main" class="space-y-5">
 
-      <!-- 1. รายงานสภาพอากาศ จ.ราชบุรี -->
-      <div class="bg-gradient-to-br from-sky-500 to-blue-600 text-white p-4 rounded-2xl shadow-md">
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">📍 จังหวัดราชบุรี</span>
-            <h2 class="text-2xl font-bold mt-1">32°C</h2>
-            <p class="text-xs text-sky-100">พยากรณ์อากาศประจำวัน: มีเมฆเป็นส่วนมาก มีฝนฟ้าคะนอง 30% ของพื้นที่</p>
-          </div>
-          <i data-lucide="cloud-rain" class="w-12 h-12 text-sky-200"></i>
+      <!-- แถบแจ้งวันที่และอัปเดตล่าสุด -->
+      <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 text-slate-700 font-medium">
+          <i data-lucide="map-pin" class="w-4 h-4 text-sky-600"></i>
+          <span>พื้นที่ควบคุม: <strong>จังหวัดราชบุรี (10 อำเภอ)</strong></span>
+        </div>
+        <div class="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 w-fit">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+          <span id="last-updated-time">อัปเดตล่าสุด: กำลังโหลด...</span>
         </div>
       </div>
 
-      <!-- 2. ประเมินความเสี่ยงเกิดอุทกภัย ครบทั้ง 10 อำเภอ จ.ราชบุรี -->
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-        <div class="flex justify-between items-center border-b pb-2">
-          <div>
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+      <!-- สภาพอากาศประจำวัน -->
+      <div class="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-5 rounded-3xl shadow-md flex justify-between items-center">
+        <div>
+          <span class="text-xs bg-white/20 px-2.5 py-0.5 rounded-full font-medium">สภาพอากาศวันนี้</span>
+          <h2 class="text-3xl font-bold mt-1">32°C</h2>
+          <p class="text-xs text-sky-100 mt-1">ท้องฟ้ามีเมฆเป็นส่วนมาก มีโอกาสเกิดฝนฟ้าคะนอง 30% ของพื้นที่</p>
+        </div>
+        <i data-lucide="cloud-rain" class="w-14 h-14 text-sky-200"></i>
+      </div>
+
+      <!-- 2 กรอบหลัก (แบ่งเป็น 2 ฝั่ง): โอกาสเกิดอุทกภัย vs ฝุ่น PM 2.5 รายอำเภอ -->
+      <div class="grid md:grid-cols-2 gap-4">
+
+        <!-- กรอบที่ 1: เปอร์เซ็นต์โอกาสเกิดอุทกภัย -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
               <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
-              ประเมินความเสี่ยงอุทกภัย & ฝุ่น PM2.5 (10 อำเภอ)
+              โอกาสเกิดอุทกภัย (%)
             </h3>
-            <p class="text-[11px] text-slate-400">วิเคราะห์จากสถิติปริมาณน้ำฝนและพื้นที่ลุ่มต่ำ</p>
+            <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-full">รายอำเภอ</span>
+          </div>
+
+          <div class="space-y-2.5 text-xs">
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>1. อ.เมืองราชบุรี</span>
+                <span class="font-bold text-amber-600">45%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>2. อ.โพธาราม</span>
+                <span class="font-bold text-amber-600">50%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>3. อ.ดำเนินสะดวก</span>
+                <span class="font-bold text-orange-600">65%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-orange-500 h-full rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>4. อ.บางแพ</span>
+                <span class="font-bold text-amber-600">40%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 40%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>5. อ.บ้านโป่ง</span>
+                <span class="font-bold text-emerald-600">25%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>6. อ.สวนผึ้ง</span>
+                <span class="font-bold text-orange-600">70%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-orange-500 h-full rounded-full" style="width: 70%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>7. อ.จอมบึง</span>
+                <span class="font-bold text-emerald-600">20%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 20%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>8. อ.ปากท่อ</span>
+                <span class="font-bold text-amber-600">35%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 35%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>9. อ.วัดเพลง</span>
+                <span class="font-bold text-amber-600">45%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between font-medium text-slate-700">
+                <span>10. อ.บ้านคา</span>
+                <span class="font-bold text-orange-600">60%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-orange-500 h-full rounded-full" style="width: 60%"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- รายชื่อครบ 10 อำเภอในราชบุรี พร้อม % ความเสี่ยง -->
-        <div class="space-y-2 text-xs">
-
-          <!-- อ.เมืองราชบุรี -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>1. อ.เมืองราชบุรี</span>
-              <span class="text-amber-600">โอกาสเกิดอุทกภัย 45%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full" style="width: 45%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำล้นตลิ่งริมแม่น้ำแม่กลอง | ฝุ่น PM2.5: 28 µg (ปกติ)</p>
+        <!-- กรอบที่ 2: ฝุ่น PM 2.5 รายอำเภอ -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="wind" class="w-4 h-4 text-sky-500"></i>
+              สถานการณ์ฝุ่น PM 2.5
+            </h3>
+            <span class="text-[10px] bg-sky-50 text-sky-700 font-bold px-2 py-0.5 rounded-full">รายอำเภอ</span>
           </div>
 
-          <!-- อ.โพธาราม -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>2. อ.โพธาราม</span>
-              <span class="text-amber-600">โอกาสเกิดอุทกภัย 50%</span>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">1. อ.เมืองราชบุรี</span>
+              <span class="font-bold text-slate-700">28 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ปกติ</span></span>
             </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full" style="width: 50%"></div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">2. อ.โพธาราม</span>
+              <span class="font-bold text-slate-700">42 µg/m³ <span class="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-normal">เริ่มมีผล</span></span>
             </div>
-            <p class="text-[10px] text-slate-500">พื้นที่ลุ่มต่ำริมคลองระบายน้ำ | ฝุ่น PM2.5: 42 µg (เริ่มมีผลกระทบ)</p>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">3. อ.ดำเนินสะดวก</span>
+              <span class="font-bold text-slate-700">20 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดี</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">4. อ.บางแพ</span>
+              <span class="font-bold text-slate-700">30 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ปกติ</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">5. อ.บ้านโป่ง</span>
+              <span class="font-bold text-slate-700">35 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ปกติ</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">6. อ.สวนผึ้ง</span>
+              <span class="font-bold text-slate-700">12 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดีมาก</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">7. อ.จอมบึง</span>
+              <span class="font-bold text-slate-700">25 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดี</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">8. อ.ปากท่อ</span>
+              <span class="font-bold text-slate-700">22 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดี</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">9. อ.วัดเพลง</span>
+              <span class="font-bold text-slate-700">24 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดี</span></span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">10. อ.บ้านคา</span>
+              <span class="font-bold text-slate-700">15 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-normal">ดีมาก</span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- เบอร์โทรสายด่วนฉุกเฉิน (เพิ่มจากรูปภาพ) -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-2">
+            <div class="p-2 bg-rose-50 text-rose-600 rounded-xl">
+              <i data-lucide="phone-call" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-800 text-sm">น้ำท่วมมาเมื่อไหร่ มีเบอร์นี้อุ่นใจกว่า</h3>
+              <p class="text-[11px] text-slate-400">เซฟไว้ ใช้เมื่อต้องการความช่วยเหลือด่วน</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          
+          <!-- หมวดที่ 1: ขอความช่วยเหลือ -->
+          <div class="bg-sky-50/50 p-4 rounded-2xl border border-sky-100 space-y-3">
+            <h4 class="font-bold text-sky-800 text-xs flex items-center gap-1.5">
+              <i data-lucide="life-buoy" class="w-4 h-4 text-sky-600"></i>
+              1. ขอความช่วยเหลือ (ศูนย์ช่วยเหลือน้ำท่วม)
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <a href="tel:1111" class="p-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 transition flex flex-col justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 1111 <span class="text-[10px] font-normal text-slate-500">กด 5</span></p>
+                  <p class="font-semibold text-slate-700 text-[11px] mt-0.5">ศูนย์ช่วยเหลือผู้ประสบอุทกภัย</p>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">รับแจ้ง-เตือนภัยน้ำท่วม</p>
+              </a>
+
+              <a href="tel:1784" class="p-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 transition flex flex-col justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 1784</p>
+                  <p class="font-semibold text-slate-700 text-[11px] mt-0.5">ด่วนนิรภัย ปภ.</p>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">แจ้งเหตุและขอความช่วยเหลือสาธารณภัย</p>
+              </a>
+
+              <a href="tel:1677" class="p-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 transition flex flex-col justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 1677</p>
+                  <p class="font-semibold text-slate-700 text-[11px] mt-0.5">ร่วมด้วยช่วยกัน</p>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">ประสานความช่วยเหลือ</p>
+              </a>
+
+              <a href="tel:1664" class="p-2.5 bg-white rounded-xl border border-sky-100 hover:border-sky-300 transition flex flex-col justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 1664</p>
+                  <p class="font-semibold text-slate-700 text-[11px] mt-0.5">สภากาชาดไทย</p>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">ช่วยเหลือสาธารณภัย</p>
+              </a>
+            </div>
           </div>
 
-          <!-- อ.ดำเนินสะดวก -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>3. อ.ดำเนินสะดวก</span>
-              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 65%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-orange-500 h-full" style="width: 65%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำหนุนสูงในร่องสวนร่องคลอง | ฝุ่น PM2.5: 20 µg (ดี)</p>
-          </div>
+          <!-- หมวดที่ 2: แพทย์และความปลอดภัย -->
+          <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 space-y-3">
+            <h4 class="font-bold text-emerald-800 text-xs flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600"></i>
+              2. แพทย์และความปลอดภัย
+            </h4>
+            <div class="space-y-2 text-xs">
+              <a href="tel:1669" class="p-2.5 bg-white rounded-xl border border-emerald-100 hover:border-emerald-300 transition flex items-center justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 1669</p>
+                  <p class="font-semibold text-slate-700 text-[11px]">แพทย์ฉุกเฉิน / รถพยาบาล</p>
+                </div>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded-lg">เจ็บป่วยฉุกเฉิน</span>
+              </a>
 
-          <!-- อ.บางแพ -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>4. อ.บางแพ</span>
-              <span class="text-amber-600">โอกาสเกิดอุทกภัย 40%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full" style="width: 40%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">การระบายน้ำอยู่ในเกณฑ์ปกติ | ฝุ่น PM2.5: 30 µg (ปกติ)</p>
-          </div>
+              <a href="tel:191" class="p-2.5 bg-white rounded-xl border border-emerald-100 hover:border-emerald-300 transition flex items-center justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 191</p>
+                  <p class="font-semibold text-slate-700 text-[11px]">ตำรวจ (เหตุด่วน เหตุร้าย)</p>
+                </div>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded-lg">ความปลอดภัย</span>
+              </a>
 
-          <!-- อ.บ้านโป่ง -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>5. อ.บ้านโป่ง</span>
-              <span class="text-emerald-600">โอกาสเกิดอุทกภัย 25%</span>
+              <a href="tel:199" class="p-2.5 bg-white rounded-xl border border-emerald-100 hover:border-emerald-300 transition flex items-center justify-between">
+                <div>
+                  <p class="font-bold text-rose-600 text-base">📞 199</p>
+                  <p class="font-semibold text-slate-700 text-[11px]">ดับเพลิงและกู้ภัย</p>
+                </div>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded-lg">กู้ภัยฉุกเฉิน</span>
+              </a>
             </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500 h-full" style="width: 25%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">สถานการณ์ปกติ | ฝุ่น PM2.5: 35 µg (ปกติ)</p>
-          </div>
-
-          <!-- อ.สวนผึ้ง -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>6. อ.สวนผึ้ง</span>
-              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 70%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-orange-500 h-full" style="width: 70%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">พื้นที่เชิงเขา เสี่ยงน้ำป่าไหลหลาก | ฝุ่น PM2.5: 12 µg (ดีมาก)</p>
-          </div>
-
-          <!-- อ.จอมบึง -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>7. อ.จอมบึง</span>
-              <span class="text-emerald-600">โอกาสเกิดอุทกภัย 20%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-emerald-500 h-full" style="width: 20%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">พื้นที่ส่วนใหญ่แห้งแล้ง ปกติ | ฝุ่น PM2.5: 25 µg (ปกติ)</p>
-          </div>
-
-          <!-- อ.ปากท่อ -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>8. อ.ปากท่อ</span>
-              <span class="text-amber-600">โอกาสเกิดอุทกภัย 35%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full" style="width: 35%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำท่วมขังทางหลวงบางจุด | ฝุ่น PM2.5: 22 µg (ดี)</p>
-          </div>
-
-          <!-- อ.วัดเพลง -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>9. อ.วัดเพลง</span>
-              <span class="text-amber-600">โอกาสเกิดอุทกภัย 45%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full" style="width: 45%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">พื้นที่ใกล้คลองระบายน้ำ | ฝุ่น PM2.5: 24 µg (ดี)</p>
-          </div>
-
-          <!-- อ.บ้านคา -->
-          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-            <div class="flex justify-between font-bold text-slate-700">
-              <span>10. อ.บ้านคา</span>
-              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 60%</span>
-            </div>
-            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div class="bg-orange-500 h-full" style="width: 60%"></div>
-            </div>
-            <p class="text-[10px] text-slate-500">ระวังน้ำป่าไหลซอนเหมือง/ห้วย | ฝุ่น PM2.5: 15 µg (ดีมาก)</p>
           </div>
 
         </div>
       </div>
 
-      <!-- 3. รายการหมุดที่ประชาชนปักหมุดไว้ -->
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+      <!-- สิ่งที่ต้องทำ และ สิ่งที่ต้องเตรียม -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+        <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+          <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+            <i data-lucide="check-square" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm">ข้อควรปฏิบัติและเตรียมความพร้อมอุทกภัย</h3>
+            <p class="text-[11px] text-slate-400">คำแนะนำเพื่อความปลอดภัยของครอบครัว</p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <!-- สิ่งที่ต้องเตรียม -->
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              🎒 สิ่งที่ต้องเตรียม (Emergency Kit)
+            </h4>
+            <ul className="space-y-1.5 text-xs text-slate-600 pl-3 list-disc">
+              <li>น้ำดื่มสะอาด อาหารแห้ง/ยาสด อย่างน้อย 3 วัน</li>
+              <li>ยารักษาโรคประจำตัว และชุดปฐมพยาบาล</li>
+              <li>เอกสารสำคัญ เช่น บัตรประชาชน ทะเบียนบ้าน ใส่ถุงกันน้ำ</li>
+              <li>ไฟฉาย แบตเตอรี่สำรอง (Powerbank) และวิทยุ</li>
+            </ul>
+          </div>
+
+          <!-- สิ่งที่ต้องทำ -->
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              🚨 สิ่งที่ต้องทำ (Action Plan)
+            </h4>
+            <ul className="space-y-1.5 text-xs text-slate-600 pl-3 list-disc">
+              <li>ขนย้ายสิ่งของ เครื่องใช้ไฟฟ้าขึ้นที่สูง</li>
+              <li>ตัดสะพานไฟ (คัทเอาท์ชั้นล่าง) เพื่อป้องกันไฟรั่ว</li>
+              <li>ติดตามประกาศเตือนภัยจากทางอำเภออย่างใกล้ชิด</li>
+              <li>สำรวจจุดอพยพและเส้นทางปลอดภัยล่วงหน้า</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- รายการหมุดปักเตือนภัยจากประชาชน -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
         <div class="flex justify-between items-center">
           <div>
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
               <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
-              จุดปักหมุดแจ้งเตือนจากประชาชน
+              จุดรายงานสถานการณ์จากประชาชน
             </h3>
-            <p class="text-[11px] text-slate-500">คลิกที่หมุดเพื่อดูข้อมูลและรูปถ่ายจริง</p>
+            <p class="text-[11px] text-slate-400">กดที่รายการหมุดเพื่อดูรูปและข้อมูลจริง</p>
           </div>
-          <button onclick="switchPage('add')" class="text-xs bg-sky-600 hover:bg-sky-700 text-white px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow">
+          <button onclick="switchPage('add')" class="text-xs bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-xl font-semibold transition">
             + ปักหมุดเพิ่ม
           </button>
         </div>
 
-        <!-- รายการหมุด ( เริ่มต้นจะว่างเปล่าตามที่ขอ ) -->
         <div id="pin-list" class="space-y-2">
-          <!-- Render ผ่าน JS -->
+          <!-- Render หมุดปักด้วย JS -->
         </div>
       </div>
 
@@ -215,133 +397,142 @@
     <!-- ================================================================= -->
     <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE) -->
     <!-- ================================================================= -->
-    <div id="page-add" class="hidden space-y-4">
-
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-        <div>
-          <h2 class="font-bold text-slate-800 text-base">📍 ปักหมุดรายงานตำแหน่ง (จ.ราชบุรี)</h2>
-          <p class="text-xs text-slate-500">แตะบนแผนที่เพื่อเลือกจุดที่คุณต้องการรายงาน</p>
-        </div>
-
-        <!-- แผนที่ Interactive -->
-        <div id="map" class="w-full h-60 rounded-xl border border-slate-300 z-10"></div>
-        <p class="text-[11px] text-slate-400">พิกัดที่เลือก: <span id="selected-coords" class="font-mono text-slate-600">ยังไม่ได้คลิกเลือก</span></p>
-
-        <!-- ฟอร์มกรอกข้อมูล -->
-        <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-3 pt-2 border-t">
-          
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อสถานที่ / จุดสังเกต</label>
-            <input type="text" id="pin-title" placeholder="เช่น สะพานข้ามแม่น้ำแม่กลอง, หน้าโรงเรียน..." required
-              class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">อำเภอ</label>
-            <select id="pin-district" required class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
-              <option value="เมืองราชบุรี">เมืองราชบุรี</option>
-              <option value="โพธาราม">โพธาราม</option>
-              <option value="บ้านโป่ง">บ้านโป่ง</option>
-              <option value="ดำเนินสะดวก">ดำเนินสะดวก</option>
-              <option value="บางแพ">บางแพ</option>
-              <option value="สวนผึ้ง">สวนผึ้ง</option>
-              <option value="จอมบึง">จอมบึง</option>
-              <option value="วัดเพลง">วัดเพลง</option>
-              <option value="ปากท่อ">ปากท่อ</option>
-              <option value="บ้านคา">บ้านคา</option>
-            </select>
-          </div>
-
-          <!-- เลือกความรุนแรง 4 ระดับ (พร้อมคำอธิบายแบบละเอียด) -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">เลือกระดับสถานการณ์น้ำ (4 ระดับ)</label>
-            <div class="space-y-2 text-xs">
-              
-              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-emerald-50/50 transition">
-                <input type="radio" name="water-level" value="1" checked onchange="togglePhotoRequirement()" class="mt-0.5 text-emerald-600">
-                <div>
-                  <div class="flex items-center gap-1.5 font-bold text-emerald-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                    ระดับ 1: ปกติ / แห้งแล้ง
-                  </div>
-                  <p class="text-[11px] text-slate-500">ปริมาณน้ำน้อย แห้งแล้ง ไม่มีน้ำท่วมขังในบริเวณนั้น หรือไร่นาขาดน้ำ</p>
-                </div>
-              </label>
-
-              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-amber-50/50 transition">
-                <input type="radio" name="water-level" value="2" onchange="togglePhotoRequirement()" class="mt-0.5 text-amber-600">
-                <div>
-                  <div class="flex items-center gap-1.5 font-bold text-amber-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                    ระดับ 2: เฝ้าระวัง / เริ่มท่วมขัง
-                  </div>
-                  <p class="text-[11px] text-slate-500">ระดับน้ำสูงปริ่มตลิ่ง มีน้ำท่วมขังตามขอบทางขรุขระ เริ่มส่งผลกระทบเล็กน้อย</p>
-                </div>
-              </label>
-
-              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-orange-50/50 transition">
-                <input type="radio" name="water-level" value="3" onchange="togglePhotoRequirement()" class="mt-0.5 text-orange-600">
-                <div>
-                  <div class="flex items-center gap-1.5 font-bold text-orange-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-                    ระดับ 3: เตือนภัย / น้ำท่วมสูง
-                  </div>
-                  <p class="text-[11px] text-slate-500">เอ่อล้นเข้าบ้านเรือน/ถนน รถเล็กสัญจรไม่ได้ ให้เตรียมยกทรัพย์สินขึ้นที่สูง</p>
-                </div>
-              </label>
-
-              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-rose-50/50 transition">
-                <input type="radio" name="water-level" value="4" onchange="togglePhotoRequirement()" class="mt-0.5 text-rose-600">
-                <div>
-                  <div class="flex items-center gap-1.5 font-bold text-rose-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                    ระดับ 4: วิกฤต / ท่วมหนักมาก
-                  </div>
-                  <p class="text-[11px] text-slate-500">ระดับน้ำสูงมาก กระแสน้ำเชี่ยว เป็นอันตรายถึงชีวิต ต้องอพยพทันที</p>
-                </div>
-              </label>
-
-            </div>
-          </div>
-
-          <!-- ช่องถ่ายรูป / อัปโหลดภาพถ่ายหลักฐาน (เพื่อป้องกันการกดเล่น) -->
-          <div id="photo-upload-box" class="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-2">
-            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
-              <span class="flex items-center gap-1">
-                <i data-lucide="camera" class="w-4 h-4 text-sky-600"></i>
-                ถ่ายภาพหลักฐานสถานที่จริง
-              </span>
-              <span id="photo-required-label" class="text-[10px] text-slate-400">(ไม่บังคับ)</span>
-            </label>
-            <input type="file" id="pin-photo" accept="image/*" capture="environment" onchange="previewImage(event)"
-              class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
-            <!-- แสดงตัวอย่างภาพ -->
-            <div id="image-preview-container" class="hidden mt-2">
-              <img id="image-preview" src="#" alt="ตัวอย่างรูปถ่าย" class="w-full h-36 object-cover rounded-lg border">
-            </div>
-            <p class="text-[10px] text-amber-600 font-medium">* กรณีเลือกระดับเตือนภัย/วิกฤต จำเป็นต้องถ่ายรูปเพื่อยืนยัน ป้องกันการปักหมุดเท็จ</p>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดเพิ่มเติม</label>
-            <textarea id="pin-detail" rows="2" placeholder="เช่น บริเวณนี้แห้งมากไม่มีน้ำในนาเลย หรือ มีน้ำสูงประมาณ 30 ซม."
-              class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
-          </div>
-
-          <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow transition">
-            ยันยันการปักหมุด
-          </button>
-
-        </form>
+    <div id="page-add" class="hidden max-w-xl mx-auto bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+      <div>
+        <h2 class="font-bold text-slate-800 text-base">📍 ปักหมุดรายงานสถานการณ์น้ำ</h2>
+        <p class="text-xs text-slate-400">แตะเลือกตำแหน่งบนแผนที่ในจังหวัดราชบุรี</p>
       </div>
 
+      <!-- แผนที่ Interactive -->
+      <div id="map" class="w-full h-56 rounded-2xl border border-slate-200 z-10"></div>
+      <p class="text-[11px] text-slate-400">พิกัดที่เลือก: <span id="selected-coords" class="font-mono text-slate-600">ยังไม่ได้คลิกเลือก</span></p>
+
+      <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-4 pt-2 border-t border-slate-100">
+        
+        <!-- แนวโน้มระดับน้ำ ( Radio Card / เลือกได้อย่างเดียวเท่านั้น ) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">
+            แนวโน้มระดับน้ำในขณะนี้ <span class="text-rose-500">* (เลือกได้ 1 ตัวเลือก)</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2.5 text-xs">
+            
+            <label class="flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:bg-emerald-50/50 transition text-center group">
+              <input type="radio" name="water-trend" value="decreasing" checked class="mb-1 text-emerald-600">
+              <span class="font-bold text-emerald-700">🔽 น้ำลดลง</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">ระดับน้ำทรงตัว/แห้ง</span>
+            </label>
+
+            <label class="flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:bg-blue-50/50 transition text-center group">
+              <input type="radio" name="water-trend" value="stable" class="mb-1 text-blue-600">
+              <span class="font-bold text-blue-700">➖ น้ำคงที่</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">ไม่เพิ่มไม่ลด</span>
+            </label>
+
+            <label class="flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:bg-rose-50/50 transition text-center group">
+              <input type="radio" name="water-trend" value="increasing" class="mb-1 text-rose-600">
+              <span class="font-bold text-rose-700">🔼 น้ำเพิ่มขึ้น</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">เริ่มเอ่อล้น/เพิ่มสูง</span>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- ระดับความรุนแรง 4 ระดับ -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">เลือกระดับความรุนแรง</label>
+          <div class="space-y-2 text-xs">
+            
+            <label class="flex items-start gap-2.5 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-emerald-50/50">
+              <input type="radio" name="water-level" value="1" checked onchange="togglePhotoRequirement()" class="mt-0.5 text-emerald-600">
+              <div>
+                <span class="font-bold text-emerald-700">ระดับ 1: ปกติ / แห้งแล้ง</span>
+                <p class="text-[10px] text-slate-500">ปริมาณน้ำน้อย ไม่มีน้ำท่วมขังในบริเวณนั้น</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50/50">
+              <input type="radio" name="water-level" value="2" onchange="togglePhotoRequirement()" class="mt-0.5 text-amber-600">
+              <div>
+                <span class="font-bold text-amber-700">ระดับ 2: เฝ้าระวัง / ท่วมเล็กน้อย</span>
+                <p class="text-[10px] text-slate-500">ระดับน้ำปริ่มตลิ่ง มีน้ำท่วมขังผิวจราจร</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-orange-50/50">
+              <input type="radio" name="water-level" value="3" onchange="togglePhotoRequirement()" class="mt-0.5 text-orange-600">
+              <div>
+                <span class="font-bold text-orange-700">ระดับ 3: เตือนภัย / ท่วมสูง</span>
+                <p class="text-[10px] text-slate-500">เอ่อล้นเข้าบ้านเรือน รถเล็กสัญจรไม่ได้ ให้เตรียมยกของขึ้นที่สูง</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-rose-50/50">
+              <input type="radio" name="water-level" value="4" onchange="togglePhotoRequirement()" class="mt-0.5 text-rose-600">
+              <div>
+                <span class="font-bold text-rose-700">ระดับ 4: วิกฤต / ท่วมหนัก</span>
+                <p class="text-[10px] text-slate-500">ระดับน้ำสูงมาก กระแสน้ำเชี่ยว ต้องอพยพทันที</p>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อสถานที่ / จุดสังเกต</label>
+          <input type="text" id="pin-title" placeholder="เช่น สะพานข้ามแม่น้ำแม่กลอง, หน้าวัด..." required
+            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">อำเภอ</label>
+          <select id="pin-district" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
+            <option value="เมืองราชบุรี">เมืองราชบุรี</option>
+            <option value="โพธาราม">โพธาราม</option>
+            <option value="บ้านโป่ง">บ้านโป่ง</option>
+            <option value="ดำเนินสะดวก">ดำเนินสะดวก</option>
+            <option value="บางแพ">บางแพ</option>
+            <option value="สวนผึ้ง">สวนผึ้ง</option>
+            <option value="จอมบึง">จอมบึง</option>
+            <option value="วัดเพลง">วัดเพลง</option>
+            <option value="ปากท่อ">ปากท่อ</option>
+            <option value="บ้านคา">บ้านคา</option>
+          </select>
+        </div>
+
+        <!-- อัปโหลดรูปภาพ -->
+        <div id="photo-upload-box" class="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-2xl space-y-2">
+          <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-1">
+              <i data-lucide="camera" class="w-4 h-4 text-sky-600"></i>
+              ถ่ายรูปยืนยันสถานที่จริง
+            </span>
+            <span id="photo-required-label" class="text-[10px] text-slate-400">(ไม่บังคับ)</span>
+          </label>
+          <input type="file" id="pin-photo" accept="image/*" capture="environment" onchange="previewImage(event)"
+            class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+          <div id="image-preview-container" class="hidden mt-2">
+            <img id="image-preview" src="#" alt="ตัวอย่างรูปถ่าย" class="w-full h-36 object-cover rounded-xl border">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดเพิ่มเติม</label>
+          <textarea id="pin-detail" rows="2" placeholder="กรอกข้อมูลเพิ่มเติมเกี่ยวกับสถานการณ์น้ำในจุดนี้..."
+            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+          บันทึกการปักหมุด
+        </button>
+
+      </form>
     </div>
 
   </div>
 
-  <!-- ================= MODAL แสดงรายละเอียดหมุด ================= -->
+  <!-- MODAL แสดงรายละเอียดหมุด -->
   <div id="detail-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity">
-    <div class="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3 shadow-2xl transform scale-95 transition-transform" id="detail-modal-box">
+    <div class="bg-white rounded-3xl p-5 max-w-sm w-full space-y-3 shadow-2xl transform scale-95 transition-transform" id="detail-modal-box">
       <div class="flex justify-between items-start">
         <span id="modal-level-badge" class="px-2.5 py-1 text-xs font-bold rounded-full">ระดับ</span>
         <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600">
@@ -354,20 +545,19 @@
         <p id="modal-district" class="text-xs text-slate-500">อ.เมืองราชบุรี</p>
       </div>
 
-      <!-- แสดงภาพถ่ายจากสถานที่จริง -->
       <div id="modal-photo-container" class="hidden">
-        <p class="text-[11px] font-bold text-slate-600 mb-1">📷 รูปถ่ายจากพื้นที่จริง:</p>
-        <img id="modal-photo" src="" class="w-full h-44 object-cover rounded-xl border">
+        <img id="modal-photo" src="" class="w-full h-40 object-cover rounded-2xl border border-slate-100">
       </div>
 
-      <div class="p-3 bg-slate-50 rounded-xl border text-xs text-slate-600 space-y-1">
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs text-slate-600 space-y-1">
+        <p><strong>แนวโน้มน้ำ:</strong> <span id="modal-trend" class="font-bold">...</span></p>
         <p><strong>รายละเอียด:</strong> <span id="modal-detail">...</span></p>
         <p><strong>พิกัด:</strong> <span id="modal-coords" class="font-mono text-[11px]">...</span></p>
       </div>
 
-      <a id="modal-gmap-link" href="#" target="_blank" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition">
+      <a id="modal-gmap-link" href="#" target="_blank" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow">
         <i data-lucide="map" class="w-4 h-4"></i>
-        เปิดตำแหน่งบน Google Maps
+        นำทางด้วย Google Maps
       </a>
     </div>
   </div>
@@ -376,25 +566,36 @@
   <script>
     lucide.createIcons();
 
-    // รายการหมุดเริ่มต้น (กำหนดเป็น Array ว่างไว้เพื่อไม่ให้มีหมุดค้าง)
     let pins = [];
     let uploadedImageBase64 = null;
-
     let map = null;
     let tempMarker = null;
-    let selectedLat = 13.5385; // ศูนย์กลางราชบุรี
+    let selectedLat = 13.5385; 
     let selectedLng = 99.8180;
 
     const levelConfig = {
-      1: { name: "ระดับ 1: ปกติ / แห้งแล้ง", bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
-      2: { name: "ระดับ 2: เฝ้าระวัง / ท่วมเล็กน้อย", bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-200" },
-      3: { name: "ระดับ 3: เตือนภัย / ท่วมสูง", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
-      4: { name: "ระดับ 4: วิกฤต / ท่วมหนักมาก", bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" }
+      1: { name: "ระดับ 1: ปกติ/แห้ง", bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
+      2: { name: "ระดับ 2: เฝ้าระวัง", bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-200" },
+      3: { name: "ระดับ 3: เตือนภัย", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+      4: { name: "ระดับ 4: วิกฤต", bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" }
+    };
+
+    const trendTextMap = {
+      decreasing: "🔽 น้ำลดลง",
+      stable: "➖ น้ำคงที่",
+      increasing: "🔼 น้ำเพิ่มขึ้น"
     };
 
     window.onload = function() {
+      updateLastUpdatedTime();
       renderPinList();
     };
+
+    function updateLastUpdatedTime() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      document.getElementById('last-updated-time').innerText = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH', options)} น.`;
+    }
 
     function switchPage(page) {
       const pageMain = document.getElementById('page-main');
@@ -405,13 +606,13 @@
       if (page === 'main') {
         pageMain.classList.remove('hidden');
         pageAdd.classList.add('hidden');
-        btnMain.className = "px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition";
-        btnAdd.className = "px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition";
+        btnMain.className = "px-3.5 py-1.5 rounded-xl bg-white text-sky-700 shadow-sm transition";
+        btnAdd.className = "px-3.5 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition";
       } else {
         pageMain.classList.add('hidden');
         pageAdd.classList.remove('hidden');
-        btnAdd.className = "px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition";
-        btnMain.className = "px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition";
+        btnAdd.className = "px-3.5 py-1.5 rounded-xl bg-white text-sky-700 shadow-sm transition";
+        btnMain.className = "px-3.5 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition";
         initMap();
       }
     }
@@ -443,13 +644,12 @@
       });
     }
 
-    // สลับข้อความ บังคับรูปถ่าย หากเลือกระดับ 3 หรือ 4
     function togglePhotoRequirement() {
       const level = parseInt(document.querySelector('input[name="water-level"]:checked').value);
       const label = document.getElementById('photo-required-label');
       
       if (level >= 3) {
-        label.innerText = "(จำเป็นต้องถ่ายรูปป้องกันปักเล่น)";
+        label.innerText = "(จำเป็นต้องถ่ายรูปยืนยัน)";
         label.className = "text-[10px] text-rose-600 font-bold";
       } else {
         label.innerText = "(ไม่บังคับ)";
@@ -457,7 +657,6 @@
       }
     }
 
-    // พรีวิวรูปภาพเมื่อผู้ใช้ถ่าย/เลือกรูป
     function previewImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -471,16 +670,14 @@
       }
     }
 
-    // แสดงรายการหมุดในหน้าหลัก
     function renderPinList() {
       const pinListEl = document.getElementById('pin-list');
       
       if (pins.length === 0) {
         pinListEl.innerHTML = `
-          <div class="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl">
+          <div class="text-center py-8 border-2 border-dashed border-slate-100 rounded-2xl">
             <i data-lucide="map-pin-off" class="w-8 h-8 text-slate-300 mx-auto mb-1"></i>
-            <p class="text-xs text-slate-400">ยังไม่มีการปักหมุดแจ้งเตือนในขณะนี้</p>
-            <p class="text-[10px] text-slate-400 mt-0.5">กดปุ่ม "+ ปักหมุดเพิ่ม" ด้านบนเพื่อเริ่มรายงานจุดแรก</p>
+            <p class="text-xs text-slate-400">ยังไม่มีจุดปักหมุดรายงานในขณะนี้</p>
           </div>
         `;
         lucide.createIcons();
@@ -491,18 +688,18 @@
       pins.forEach(pin => {
         const config = levelConfig[pin.level];
         const card = document.createElement('div');
-        card.className = `p-3 rounded-xl border ${config.border} hover:shadow-md transition cursor-pointer flex justify-between items-center bg-white`;
+        card.className = `p-3 rounded-2xl border ${config.border} hover:shadow-sm transition cursor-pointer flex justify-between items-center bg-white`;
         card.onclick = () => openDetailModal(pin);
 
         card.innerHTML = `
           <div class="space-y-0.5">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
               <span class="font-bold text-xs text-slate-800">${pin.title}</span>
-              ${pin.photo ? '<i data-lucide="image" class="w-3.5 h-3.5 text-sky-600"></i>' : ''}
+              <span class="text-[10px] text-slate-500">(${trendTextMap[pin.trend]})</span>
             </div>
             <p class="text-[11px] text-slate-500">อ.${pin.district} • ${pin.detail}</p>
           </div>
-          <span class="text-[10px] font-bold px-2 py-1 rounded-full ${config.bg} ${config.text} whitespace-nowrap">
+          <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${config.bg} ${config.text} whitespace-nowrap">
             ${config.name}
           </span>
         `;
@@ -511,18 +708,17 @@
       lucide.createIcons();
     }
 
-    // บันทึกหมุดใหม่
     function savePin(e) {
       e.preventDefault();
 
       const title = document.getElementById('pin-title').value;
       const district = document.getElementById('pin-district').value;
+      const trend = document.querySelector('input[name="water-trend"]:checked').value;
       const level = parseInt(document.querySelector('input[name="water-level"]:checked').value);
       const detail = document.getElementById('pin-detail').value || "ไม่มีรายละเอียดเพิ่มเติม";
 
-      // ตรวจสอบหลักฐานรูปถ่ายหากเลือกระดับ 3 หรือ 4
       if (level >= 3 && !uploadedImageBase64) {
-        alert("⚠️ เพื่อป้องกันการปักหมุดเล่น ในระดับเตือนภัย/วิกฤต จำเป็นต้องแนบภาพถ่ายสถานที่จริงครับ!");
+        alert("⚠️ เพื่อป้องกันการปักหมุดเล่น ในระดับเตือนภัย/วิกฤต จำเป็นต้องถ่ายรูปแนบหลักฐานด้วยครับ");
         return;
       }
 
@@ -530,6 +726,7 @@
         id: Date.now(),
         title: title,
         district: district,
+        trend: trend,
         level: level,
         detail: detail,
         photo: uploadedImageBase64,
@@ -537,28 +734,22 @@
         lng: selectedLng
       };
 
-      pins.unshift(newPin); // เอาอันล่าสุดขึ้นก่อน
+      pins.unshift(newPin);
       renderPinList();
 
-      // ลบหมุดชั่วคราวบนแผนที่
-      if (map && tempMarker) {
-        L.marker([selectedLat, selectedLng]).addTo(map).bindPopup(`<b>${title}</b>`);
-      }
-
-      // รีเซ็ตฟอร์ม
       document.getElementById('add-pin-form').reset();
       document.getElementById('image-preview-container').classList.add('hidden');
       uploadedImageBase64 = null;
 
-      alert("ปักหมุดรายงานสำเร็จ! ข้อมูลถูกนำไปแสดงผลบนหน้าหลักเรียบร้อยแล้ว");
+      alert("ปักหมุดสำเร็จ! ข้อมูลถูกนำไปแสดงที่หน้าแรกแล้ว");
       switchPage('main');
     }
 
-    // เปิด Modal แสดงรายละเอียดเมื่อกดดูหมุด
     function openDetailModal(pin) {
       const config = levelConfig[pin.level];
       document.getElementById('modal-title').innerText = pin.title;
       document.getElementById('modal-district').innerText = `อำเภอ${pin.district}, จังหวัดราชบุรี`;
+      document.getElementById('modal-trend').innerText = trendTextMap[pin.trend];
       document.getElementById('modal-detail').innerText = pin.detail;
       document.getElementById('modal-coords').innerText = `${pin.lat.toFixed(5)}, ${pin.lng.toFixed(5)}`;
       
@@ -566,7 +757,6 @@
       badge.innerText = config.name;
       badge.className = `px-2.5 py-1 text-xs font-bold rounded-full ${config.bg} ${config.text}`;
 
-      // แสดงรูปถ่ายถ้ามี
       const photoContainer = document.getElementById('modal-photo-container');
       const photoImg = document.getElementById('modal-photo');
       if (pin.photo) {
