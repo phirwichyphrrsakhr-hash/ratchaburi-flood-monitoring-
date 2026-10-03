@@ -1,276 +1,178 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบปักหมุดรายงานระดับน้ำ จ.ราชบุรี</title>
-    <!-- โหลด Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- โหลด ฟอนต์ Prompt -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- โหลด Leaflet CSS & JS (แผนที่ฟรี) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: #f0f4f8;
-            margin: 0;
-            padding: 15px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            color: #023e8a;
-            font-size: 1.3em;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .instruction {
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 0.88em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #map {
-            width: 100%;
-            height: 480px;
-            border-radius: 12px;
-            border: 2px solid #cbd5e1;
-            z-index: 1;
-        }
-
-        /* ตกแต่งฟอร์มในป๊อปอัปแผนที่ */
-        .popup-form {
-            font-family: 'Prompt', sans-serif;
-            padding: 5px;
-            width: 240px;
-        }
-
-        .popup-form h4 {
-            margin: 0 0 8px 0;
-            color: #023e8a;
-            font-size: 1em;
-        }
-
-        .popup-form label {
-            font-size: 0.82em;
-            color: #475569;
-            display: block;
-            margin-top: 8px;
-        }
-
-        .popup-form input, .popup-form select {
-            width: 100%;
-            padding: 6px 8px;
-            margin-top: 4px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-family: 'Prompt', sans-serif;
-            font-size: 0.85em;
-        }
-
-        /* กล่องแจ้งเตือนการแนบรูปสำหรับระดับวิกฤต */
-        .photo-upload-box {
-            display: none; /* ซ่อนไว้ก่อน จะแสดงเมื่อเลือกวิกฤตเท่านั้น */
-            margin-top: 8px;
-            padding: 8px;
-            background: #fef2f2;
-            border: 1px dashed #ef4444;
-            border-radius: 8px;
-        }
-
-        .photo-upload-box label {
-            color: #dc2626;
-            font-weight: 600;
-            margin-top: 0;
-        }
-
-        .img-preview {
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .popup-form button {
-            width: 100%;
-            background: #00b4d8;
-            color: white;
-            border: none;
-            padding: 8px;
-            margin-top: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Prompt', sans-serif;
-            font-weight: 500;
-        }
-
-        .popup-form button:hover {
-            background: #0284c7;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบติดตามระดับน้ำ</title>
+  <!-- ดึง Tailwind CSS มาใช้แต่งหน้าตา -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons สำหรับไอคอน -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans">
 
-<div class="container">
-    <h1><i class="fa-solid fa-map-location-dot" style="color: #0077b6;"></i> แผนที่ปักหมุดระดับน้ำ จ.ราชบุรี</h1>
+  <!-- ================= หน้าหลัก (MAIN PAGE) ================= -->
+  <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg flex flex-col">
     
-    <div class="instruction">
-        <i class="fa-solid fa-hand-pointer"></i>
-        <span><strong>วิธีใช้งาน:</strong> แตะหรือคลิกจุดบนแผนที่เพื่อปักหมุด (หากเลือกระดับวิกฤต ต้องถ่ายภาพสถานที่จริง)</span>
-    </div>
+    <!-- Header หน้าหลัก -->
+    <header class="p-4 bg-sky-600 text-white flex justify-between items-center shadow">
+      <div>
+        <h1 class="font-bold text-lg">ระบบเฝ้าระวังน้ำท่วม</h1>
+        <p class="text-xs text-sky-100">ภาพรวมและข้อมูลสถานการณ์น้ำ</p>
+      </div>
+      <i data-lucide="waves" class="w-7 h-7"></i>
+    </header>
 
-    <!-- แผนที่ -->
-    <div id="map"></div>
-</div>
+    <!-- Content หน้าหลัก -->
+    <main class="p-4 space-y-4 flex-1">
 
-<script>
-    const ratchaburiCoords = [13.5358, 99.8153];
-    const map = L.map('map').setView(ratchaburiCoords, 10);
+      <!-- การ์ดแสดงจุดปักหมุดที่เลือกอยู่ปัจจุบัน -->
+      <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-semibold text-sky-600 bg-sky-100 px-2 py-0.5 rounded-full">จุดที่เลือกปัจจุบัน</span>
+          <h2 id="current-location-name" class="text-lg font-bold text-slate-800 mt-1">📍 สถานีประตูน้ำบางแค</h2>
+          <p id="current-water-level" class="text-sm text-slate-600">ระดับน้ำ: <span class="font-semibold text-blue-600">2.45 เมตร</span> (ปกติ)</p>
+        </div>
+        <!-- ปุ่มเปิดหน้าเลือกจุดปักหมุด -->
+        <button onclick="openModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs px-3 py-2 rounded-xl shadow flex items-center gap-1 transition">
+          <i data-lucide="map-pin" class="w-4 h-4"></i>
+          เปลี่ยนจุด
+        </button>
+      </div>
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    let tempMarker = null;
-    let currentPhotoData = null; // ตัวแปรเก็บไฟล์/DataURL ของรูปถ่าย
-
-    // เมื่อคลิกบนแผนที่
-    map.on('click', function(e) {
-        const lat = e.latlng.lat.toFixed(5);
-        const lng = e.latlng.lng.toFixed(5);
-
-        if (tempMarker) {
-            map.removeLayer(tempMarker);
-        }
-        currentPhotoData = null;
-
-        const formContent = `
-            <div class="popup-form">
-                <h4>📍 ปักหมุดแจ้งระดับน้ำ</h4>
-                <label>ชื่อจุดสังเกต / สถานที่:</label>
-                <input type="text" id="locationName" placeholder="เช่น หน้าวัด, ซอย 2" required>
-                
-                <label>ระดับน้ำปัจจุบัน:</label>
-                <select id="waterLevel" onchange="checkCriticalLevel()">
-                    <option value="green">🟢 ปกติ / แห้งขอด</option>
-                    <option value="yellow">🟡 ระดับตาตุ่ม - แข้ง (10-20 ซม.)</option>
-                    <option value="orange">🟠 ระดับเข่า (30-50 ซม.)</option>
-                    <option value="red">🔴 ระดับเอวขึ้นไป (60+ ซม.) - วิกฤต</option>
-                </select>
-
-                <!-- ส่วนแสดงปุ่มถ่ายรูป (จะเด้งออกมาเมื่อเลือกระดับวิกฤต) -->
-                <div id="photoSection" class="photo-upload-box">
-                    <label><i class="fa-solid fa-camera"></i> บังคับถ่ายภาพสถานที่จริง:</label>
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handlePhotoUpload(event)">
-                    <img id="imgPreview" class="img-preview" src="#" alt="ตัวอย่างรูปถ่าย">
-                </div>
-
-                <button onclick="savePin(${lat}, ${lng})">บันทึกการปักหมุด</button>
-            </div>
-        `;
-
-        tempMarker = L.marker([lat, lng]).addTo(map);
-        tempMarker.bindPopup(formContent).openPopup();
-    });
-
-    // เช็กว่าเลือกเลเวลวิกฤตหรือไม่
-    function checkCriticalLevel() {
-        const level = document.getElementById('waterLevel').value;
-        const photoSection = document.getElementById('photoSection');
+      <!-- ข้อมูลอื่นๆ ในหน้าหลัก (ตัวอย่าง) -->
+      <section class="space-y-3">
+        <h3 class="font-bold text-slate-700 text-sm">ข้อมูลสรุปวันนี้</h3>
         
-        if (level === 'red') {
-            photoSection.style.display = 'block'; // แสดงกล่องถ่ายรูป
-        } else {
-            photoSection.style.display = 'none';  // ซ่อนไว้กรณีเป็นระดับอื่น
-            currentPhotoData = null;
-        }
-    }
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <p class="text-xs text-slate-500">ปริมาณฝนสะสม</p>
+            <p class="text-base font-bold text-slate-700 mt-1">45.2 มม.</p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <p class="text-xs text-slate-500">สถานะการปั๊มน้ำ</p>
+            <p class="text-base font-bold text-emerald-600 mt-1">ทำงานปกติ (4/4)</p>
+          </div>
+        </div>
 
-    // จัดการอ่านรูปและทำ Preview
-    function handlePhotoUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentPhotoData = e.target.result;
-                const imgPreview = document.getElementById('imgPreview');
-                imgPreview.src = currentPhotoData;
-                imgPreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <h4 class="text-xs font-semibold text-slate-500 mb-2">การประกาศเตือนภัย</h4>
+          <p class="text-xs text-slate-600">เฝ้าระวังระดับน้ำหนุนสูงช่วงเวลา 17:00 - 19:00 น. โปรดตรวจสอบการระบายน้ำรอบบริเวณบ้าน</p>
+        </div>
+      </section>
 
-    // บันทึกปักหมุด
-    function savePin(lat, lng) {
-        const name = document.getElementById('locationName').value;
-        const level = document.getElementById('waterLevel').value;
+    </main>
+  </div>
 
-        if (!name) {
-            alert('กรุณากรอกชื่อสถานที่หรือจุดสังเกตครับ');
-            return;
-        }
+  <!-- ================= MODAL / BOTTOM SHEET (หน้าเลือกปักหมุด) ================= -->
+  <div id="pin-modal" class="fixed inset-0 bg-black/40 z-50 flex flex-col justify-end transition-opacity duration-300 opacity-0 pointer-events-none">
+    
+    <!-- พื้นที่คลิกภายนอกเพื่อปิด -->
+    <div class="flex-1" onclick="closeModal()"></div>
 
-        // เช็กความปลอดภัย: ถ้าเป็นระดับวิกฤตแต่ไม่มีรูปถ่าย จะไม่ยอมให้เซฟ
-        if (level === 'red' && !currentPhotoData) {
-            alert('⚠️ ระดับน้ำวิกฤต ต้องถ่ายภาพยืนยันสถานการณ์จริงก่อนบันทึกครับ!');
-            return;
-        }
+    <!-- ตัวกล่องป๊อปอัพเลื่อนขึ้นมาจากด้านล่าง -->
+    <div id="modal-content" class="bg-white rounded-t-3xl p-5 shadow-2xl max-w-md mx-auto w-full transition-transform duration-300 translate-y-full max-h-[85vh] flex flex-col">
+      
+      <!-- แถบจับด้านบน -->
+      <div class="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-3"></div>
 
-        let levelText = '';
-        if (level === 'green') levelText = '🟢 ปกติ / แห้งขอด';
-        else if (level === 'yellow') levelText = '🟡 ระดับตาตุ่ม - แข้ง';
-        else if (level === 'orange') levelText = '🟠 ระดับเข่า';
-        else if (level === 'red') levelText = '🔴 ระดับเอวขึ้นไป (วิกฤต)';
+      <!-- หัวข้อ Pop-up -->
+      <div class="flex justify-between items-center mb-3">
+        <div>
+          <h3 class="font-bold text-slate-800">เลือกจุดปักหมุดวัดระดับน้ำ</h3>
+          <p class="text-xs text-slate-500">คลิกเลือกสถานที่เพื่ออัปเดตข้อมูลหน้าหลัก</p>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
 
-        if (tempMarker) {
-            map.removeLayer(tempMarker);
-        }
+      <!-- พื้นที่จำลองแผนที่ (Map Simulation) -->
+      <div class="w-full h-44 bg-slate-200 rounded-xl mb-4 relative overflow-hidden border border-slate-300 flex items-center justify-center">
+        <!-- สมมติเป็นพื้นหลังแผนที่ -->
+        <span class="text-xs text-slate-400 font-semibold">[ พื้นที่แสดงแผนที่ Interactive Map ]</span>
+        <div class="absolute inset-0 bg-blue-500/5 backdrop-blur-[1px]"></div>
+      </div>
 
-        // แสดงรูปแนบในป๊อปอัปหมุดถาวร (ถ้ามี)
-        let photoHTML = '';
-        if (currentPhotoData) {
-            photoHTML = `<img src="${currentPhotoData}" style="width:100%; height:110px; object-fit:cover; border-radius:8px; margin-top:8px;">`;
-        }
+      <!-- รายชื่อจุดปักหมุดให้เลือก -->
+      <div class="space-y-2 overflow-y-auto flex-1 pr-1">
 
-        const pin = L.marker([lat, lng]).addTo(map);
-        pin.bindPopup(`
-            <div style="font-family: 'Prompt', sans-serif; width: 180px;">
-                <h3 style="margin:0 0 5px 0; color:#023e8a; font-size:1em;">${name}</h3>
-                <p style="margin:0; font-size:0.85em;"><strong>สถานะน้ำ:</strong> ${levelText}</p>
-                ${photoHTML}
-                <small style="color:#64748b; display:block; margin-top:5px;">ปักหมุดเมื่อ: ${new Date().toLocaleTimeString('th-TH')} น.</small>
+        <button onclick="selectLocation('📍 สถานีประตูน้ำบางแค', '2.45 เมตร')" 
+          class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-sky-500 hover:bg-sky-50 flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-sky-100 text-sky-600 rounded-lg group-hover:bg-sky-600 group-hover:text-white transition">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
             </div>
-        `).openPopup();
+            <div>
+              <p class="text-sm font-bold text-slate-700">สถานีประตูน้ำบางแค</p>
+              <p class="text-xs text-slate-500">ระดับน้ำปัจจุบัน: 2.45 ม.</p>
+            </div>
+          </div>
+          <span class="text-xs bg-emerald-100 text-emerald-700 font-medium px-2 py-1 rounded">ปกติ</span>
+        </button>
 
-        alert('บันทึกการปักหมุดเรียบร้อยแล้ว!');
+        <button onclick="selectLocation('📍 จุดวัดระดับน้ำคลองภาษีเจริญ', '3.10 เมตร')" 
+          class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-sky-500 hover:bg-sky-50 flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-amber-100 text-amber-600 rounded-lg group-hover:bg-amber-600 group-hover:text-white transition">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-700">จุดวัดระดับน้ำคลองภาษีเจริญ</p>
+              <p class="text-xs text-slate-500">ระดับน้ำปัจจุบัน: 3.10 ม.</p>
+            </div>
+          </div>
+          <span class="text-xs bg-amber-100 text-amber-700 font-medium px-2 py-1 rounded">เฝ้าระวัง</span>
+        </button>
+
+        <button onclick="selectLocation('📍 สถานีสูบน้ำพระโขนง', '1.80 เมตร')" 
+          class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-sky-500 hover:bg-sky-50 flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-sky-100 text-sky-600 rounded-lg group-hover:bg-sky-600 group-hover:text-white transition">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-700">สถานีสูบน้ำพระโขนง</p>
+              <p class="text-xs text-slate-500">ระดับน้ำปัจจุบัน: 1.80 ม.</p>
+            </div>
+          </div>
+          <span class="text-xs bg-emerald-100 text-emerald-700 font-medium px-2 py-1 rounded">ปกติ</span>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT CONTROL ================= -->
+  <script>
+    // แสดง Lucide Icons
+    lucide.createIcons();
+
+    const modal = document.getElementById('pin-modal');
+    const modalContent = document.getElementById('modal-content');
+
+    // ฟังก์ชั่นเปิด Pop-up เลือกจุด
+    function openModal() {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('translate-y-full');
     }
-</script>
 
+    // ฟังก์ชั่นปิด Pop-up
+    function closeModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContent.classList.add('translate-y-full');
+    }
+
+    // ฟังก์ชั่นเมื่อผู้ใช้กดเลือกจุดปักหมุด
+    function selectLocation(name, level) {
+      // 1. อัปเดตข้อมูลบนหน้าหลัก
+      document.getElementById('current-location-name').innerText = name;
+      document.getElementById('current-water-level').innerHTML = `ระดับน้ำ: <span class="font-semibold text-blue-600">${level}</span>`;
+
+      // 2. ปิด Pop-up
+      closeModal();
+    }
+  </script>
 </body>
 </html>
