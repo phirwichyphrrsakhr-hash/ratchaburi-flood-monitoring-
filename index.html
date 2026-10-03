@@ -68,13 +68,10 @@
         <button class="theme-btn" onclick="toggleDarkMode()">🌙 โหมดมืด</button>
     </div>
     
-    <!-- สภาพอากาศสด Real-time จาก WeatherWidget.io -->
-    <div class="weather-widget-container">
-        <a class="weatherwidget-io" href="https://forecast7.com/th/13p5499p81/ratchaburi/" data-label_1="ราชบุรี (Ratchaburi)" data-label_2="สภาพอากาศสดปัจจุบัน" data-theme="pure" data-basecolor="#0077b6" data-accent="" data-textcolor="#ffffff">ราชบุรี สภาพอากาศสด</a>
-        <script>
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-        </script>
-    </div>
+    <!-- กล่องสภาพอากาศสด Real-time (อัปเดตใหม่) -->
+<div class="weather-widget-container">
+    <iframe src="https://www.meteoblue.com/th/weather/widget/three/ratchaburi_%e0%b9%84%e0%b8%97%e0%b8%a2_1151253?geoloc=fixed&nocurrent=0&noforecast=0&days=3&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=monochrome"  frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 210px; border: none; border-radius: 10px;"></iframe>
+</div>
 
     <div class="alert-box">
         ⚠️ <strong>แจ้งเตือน:</strong> พื้นที่ลุ่มต่ำริมแม่น้ำแม่กลองและพื้นที่เชิงเขา ให้เฝ้าระวังระดับน้ำอย่างใกล้ชิด
