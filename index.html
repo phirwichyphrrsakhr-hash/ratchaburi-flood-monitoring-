@@ -1,482 +1,591 @@
-import 'package:flutter/material.dart';
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบแจ้งเตือนภัย & ปักหมุดระดับน้ำ จ.ราชบุรี</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS & JS (แผนที่ Interactive) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-10">
 
-void main() {
-  runApp(const FloodApp());
-}
+  <!-- Header -->
+  <header class="bg-sky-700 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i data-lucide="map-pin" class="w-6 h-6 text-amber-300"></i>
+        <div>
+          <h1 class="font-bold text-base leading-tight">ศูนย์ข้อมูลภัยพิบัติ จ.ราชบุรี</h1>
+          <p class="text-[11px] text-sky-200">Ratchaburi Water & Disaster Monitoring</p>
+        </div>
+      </div>
+      <!-- แท็บสลับหน้า -->
+      <div class="flex bg-sky-800/80 p-1 rounded-xl text-xs">
+        <button id="btn-tab-main" onclick="switchPage('main')" class="px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition">หน้าหลัก</button>
+        <button id="btn-tab-add" onclick="switchPage('add')" class="px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition">+ ปักหมุด</button>
+      </div>
+    </div>
+  </header>
 
-class FloodApp extends StatelessWidget {
-  const FloodApp({super.key});
+  <div class="max-w-xl mx-auto px-4 mt-4 space-y-4">
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Ratchaburi Water & Air Alert',
-      theme: ThemeData(
-        fontFamily: 'Sukhumvit', // หรือฟอนต์ภาษาไทยสไตล์ Minimal ที่ใช้อยู่
-        scaffoldBackgroundColor: const Color(0xFFAFAFA),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2B5B84),
-          primary: const Color(0xFF2B5B84),
-          surface: Colors.white,
-        ),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
+    <!-- ================================================================= -->
+    <!-- PAGE 1: หน้าหลัก (MAIN PAGE) -->
+    <!-- ================================================================= -->
+    <div id="page-main" class="space-y-4">
 
-// -------------------------------------------------------------
-// 1. หน้าหลัก (Home Screen)
-// -------------------------------------------------------------
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+      <!-- 1. รายงานสภาพอากาศ จ.ราชบุรี -->
+      <div class="bg-gradient-to-br from-sky-500 to-blue-600 text-white p-4 rounded-2xl shadow-md">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">📍 จังหวัดราชบุรี</span>
+            <h2 class="text-2xl font-bold mt-1">32°C</h2>
+            <p class="text-xs text-sky-100">พยากรณ์อากาศประจำวัน: มีเมฆเป็นส่วนมาก มีฝนฟ้าคะนอง 30% ของพื้นที่</p>
+          </div>
+          <i data-lucide="cloud-rain" class="w-12 h-12 text-sky-200"></i>
+        </div>
+      </div>
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+      <!-- 2. ประเมินความเสี่ยงเกิดอุทกภัย ครบทั้ง 10 อำเภอ จ.ราชบุรี -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+              ประเมินความเสี่ยงอุทกภัย & ฝุ่น PM2.5 (10 อำเภอ)
+            </h3>
+            <p class="text-[11px] text-slate-400">วิเคราะห์จากสถิติปริมาณน้ำฝนและพื้นที่ลุ่มต่ำ</p>
+          </div>
+        </div>
 
-class _HomeScreenState extends State<HomeScreen> {
-  String selectedDistrict = 'อำเภอเมืองราชบุรี';
+        <!-- รายชื่อครบ 10 อำเภอในราชบุรี พร้อม % ความเสี่ยง -->
+        <div class="space-y-2 text-xs">
 
-  final List<String> ratchaburiDistricts = [
-    'อำเภอเมืองราชบุรี',
-    'อำเภอโพธาราม',
-    'อำเภอบ้านโป่ง',
-    'อำเภอดำเนินสะดวก',
-    'อำเภอปากท่อ',
-    'อำเภอจอมบึง',
-    'อำเภอบางแพ',
-    'อำเภอวัดเพลง',
-    'อำเภอสวนผึ้ง',
-    'อำเภอบ้านคา',
-  ];
+          <!-- อ.เมืองราชบุรี -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>1. อ.เมืองราชบุรี</span>
+              <span class="text-amber-600">โอกาสเกิดอุทกภัย 45%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full" style="width: 45%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำล้นตลิ่งริมแม่น้ำแม่กลอง | ฝุ่น PM2.5: 28 µg (ปกติ)</p>
+          </div>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'จังหวัดราชบุรี',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ตัวเลือกอำเภอ
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black12),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: selectedDistrict,
-                  isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: ratchaburiDistricts.map((String district) {
-                    return DropdownMenuItem<String>(
-                      value: district,
-                      child: Text(
-                        district,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedDistrict = newValue!;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
+          <!-- อ.โพธาราม -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>2. อ.โพธาราม</span>
+              <span class="text-amber-600">โอกาสเกิดอุทกภัย 50%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full" style="width: 50%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">พื้นที่ลุ่มต่ำริมคลองระบายน้ำ | ฝุ่น PM2.5: 42 µg (เริ่มมีผลกระทบ)</p>
+          </div>
 
-            // การ์ด 2 ฝั่ง (ความเสี่ยงอุทกภัย vs ฝุ่น PM 2.5)
-            Row(
-              children: [
-                Expanded(
-                  child: _buildDashboardCard(
-                    title: 'โอกาสเกิดอุทกภัย',
-                    value: '65%',
-                    status: 'ปานกลาง (เฝ้าระวัง)',
-                    statusColor: Colors.orange,
-                    icon: Icons.water_damage_outlined,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildDashboardCard(
-                    title: 'ฝุ่น PM 2.5',
-                    value: '38 µg/m³',
-                    status: 'คุณภาพอากาศดี',
-                    statusColor: Colors.green,
-                    icon: Icons.air,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+          <!-- อ.ดำเนินสะดวก -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>3. อ.ดำเนินสะดวก</span>
+              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 65%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-orange-500 h-full" style="width: 65%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำหนุนสูงในร่องสวนร่องคลอง | ฝุ่น PM2.5: 20 µg (ดี)</p>
+          </div>
 
-            // ปุ่มไปหน้าปักหมุด
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2B5B84),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MapPinScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.location_on),
-                label: const Text(
-                  'ดูจุดปักหมุดระดับน้ำ & สัญจร',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-            const SizedBox(height: 28),
+          <!-- อ.บางแพ -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>4. อ.บางแพ</span>
+              <span class="text-amber-600">โอกาสเกิดอุทกภัย 40%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full" style="width: 40%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">การระบายน้ำอยู่ในเกณฑ์ปกติ | ฝุ่น PM2.5: 30 µg (ปกติ)</p>
+          </div>
 
-            // ส่วนที่ 3: คู่มือเตรียมพร้อมและเอาชีวิตรอด
-            const Text(
-              'คู่มือการเอาชีวิตรอดเมื่อเกิดอุทกภัย',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1F2937),
-              ),
-            ),
-            const SizedBox(height: 12),
+          <!-- อ.บ้านโป่ง -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>5. อ.บ้านโป่ง</span>
+              <span class="text-emerald-600">โอกาสเกิดอุทกภัย 25%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full" style="width: 25%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">สถานการณ์ปกติ | ฝุ่น PM2.5: 35 µg (ปกติ)</p>
+          </div>
 
-            // Checklist สิ่งที่ต้องเตรียม
-            _buildSurvivalSection(
-              title: '🎒 สิ่งที่ต้องเตรียม (Emergency Kit)',
-              color: const Color(0xFFEFF6FF),
-              child: Column(
-                children: const [
-                  _ChecklistTile(text: 'น้ำดื่มสะอาด อย่างน้อย 3 ลิตร/คน/วัน'),
-                  _ChecklistTile(text: 'อาหารแห้ง/อาหารกระป๋อง ที่เปิดทานได้ทันที'),
-                  _ChecklistTile(text: 'ยาสามัญประจำบ้าน และยาโรคประจำตัว'),
-                  _ChecklistTile(text: 'ไฟฉาย ถ่านสำรอง และแบตเตอรี่สำรอง (Powerbank)'),
-                  _ChecklistTile(text: 'เอกสารสำคัญ ใส่ถุงพลาสติกกันน้ำ'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
+          <!-- อ.สวนผึ้ง -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>6. อ.สวนผึ้ง</span>
+              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 70%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-orange-500 h-full" style="width: 70%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">พื้นที่เชิงเขา เสี่ยงน้ำป่าไหลหลาก | ฝุ่น PM2.5: 12 µg (ดีมาก)</p>
+          </div>
 
-            // ข้อควรปฏิบัติ
-            _buildSurvivalSection(
-              title: '🛡️ สิ่งที่ต้องทำเมื่อน้ำเริ่มท่วม',
-              color: const Color(0xFFFEF2F2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  _GuideBullet(text: 'ตัดระบบไฟฟ้าชั้นล่าง และถอดปลั๊กเครื่องใช้ไฟฟ้าทุกชนิด'),
-                  _GuideBullet(text: 'ยกสิ่งของและทรัพย์สินมีค่าขึ้นที่สูง'),
-                  _GuideBullet(text: 'หลีกเลี่ยงการเดินลุยน้ำท่วมขัง เพราะอาจมีกระแสไฟรั่ว หรือสิ่งมีชีวิตมีพิษ'),
-                  _GuideBullet(text: 'ติดตามข่าวสารระดับน้ำแม่น้ำแม่กลอง และการปล่อยน้ำจากเขื่อนอย่างใกล้ชิด'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+          <!-- อ.จอมบึง -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>7. อ.จอมบึง</span>
+              <span class="text-emerald-600">โอกาสเกิดอุทกภัย 20%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full" style="width: 20%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">พื้นที่ส่วนใหญ่แห้งแล้ง ปกติ | ฝุ่น PM2.5: 25 µg (ปกติ)</p>
+          </div>
 
-  Widget _buildDashboardCard({
-    required String title,
-    required String value,
-    required String status,
-    required Color statusColor,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black51,
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 20, color: const Color(0xFF6B7280)),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              status,
-              style: TextStyle(
-                fontSize: 12,
-                color: statusColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          <!-- อ.ปากท่อ -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>8. อ.ปากท่อ</span>
+              <span class="text-amber-600">โอกาสเกิดอุทกภัย 35%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full" style="width: 35%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">เฝ้าระวังน้ำท่วมขังทางหลวงบางจุด | ฝุ่น PM2.5: 22 µg (ดี)</p>
+          </div>
 
-  Widget _buildSurvivalSection({
-    required String title,
-    required Color color,
-    required Widget child,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          child,
-        ],
-      ),
-    );
-  }
-}
+          <!-- อ.วัดเพลง -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>9. อ.วัดเพลง</span>
+              <span class="text-amber-600">โอกาสเกิดอุทกภัย 45%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full" style="width: 45%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">พื้นที่ใกล้คลองระบายน้ำ | ฝุ่น PM2.5: 24 µg (ดี)</p>
+          </div>
 
-// -------------------------------------------------------------
-// 2. หน้าแผนที่/จุดปักหมุด (Map Pin Detail Screen)
-// -------------------------------------------------------------
-class MapPinScreen extends StatelessWidget {
-  const MapPinScreen({super.key});
+          <!-- อ.บ้านคา -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+            <div class="flex justify-between font-bold text-slate-700">
+              <span>10. อ.บ้านคา</span>
+              <span class="text-orange-600 font-bold">โอกาสเกิดอุทกภัย 60%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+              <div class="bg-orange-500 h-full" style="width: 60%"></div>
+            </div>
+            <p class="text-[10px] text-slate-500">ระวังน้ำป่าไหลซอนเหมือง/ห้วย | ฝุ่น PM2.5: 15 µg (ดีมาก)</p>
+          </div>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('จุดปักหมุดเฝ้าระวัง'),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // จำลองการปักหมุดตำแหน่งในจ.ราชบุรี
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.black12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: const [
-                      Icon(Icons.location_on, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text(
-                        'บริเวณริมแม่น้ำแม่กลอง (อ.เมืองราชบุรี)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 24),
+        </div>
+      </div>
 
-                  // 1. แนวโน้มระดับน้ำ
-                  const Text(
-                    'แนวโน้มระดับน้ำ',
-                    style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _buildTrendChip('มีโอกาสเพิ่มขึ้น', Colors.orange, Icons.trending_up, true),
-                      const SizedBox(width: 8),
-                      _buildTrendChip('คงที่', Colors.grey, Icons.trending_flat, false),
-                      const SizedBox(width: 8),
-                      _buildTrendChip('มีโอกาสลดลง', Colors.grey, Icons.trending_down, false),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
+      <!-- 3. รายการหมุดที่ประชาชนปักหมุดไว้ -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
+              จุดปักหมุดแจ้งเตือนจากประชาชน
+            </h3>
+            <p class="text-[11px] text-slate-500">คลิกที่หมุดเพื่อดูข้อมูลและรูปถ่ายจริง</p>
+          </div>
+          <button onclick="switchPage('add')" class="text-xs bg-sky-600 hover:bg-sky-700 text-white px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow">
+            + ปักหมุดเพิ่ม
+          </button>
+        </div>
 
-                  // 2. สถานะการเดินทางของรถยนต์
-                  const Text(
-                    'การเดินทางของยานพาหนะ',
-                    style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildPassabilityStatus(
-                    title: 'เฉพาะรถสูง / รถใหญ่ ผ่านได้',
-                    subtitle: 'ระดับน้ำท่วมขังประมาณ 20-30 ซม. รถเล็กควรเลี่ยง',
-                    color: Colors.amber.shade800,
-                    icon: Icons.warning_amber_rounded,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+        <!-- รายการหมุด ( เริ่มต้นจะว่างเปล่าตามที่ขอ ) -->
+        <div id="pin-list" class="space-y-2">
+          <!-- Render ผ่าน JS -->
+        </div>
+      </div>
 
-  static Widget _buildTrendChip(String label, Color color, IconData icon, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: isSelected ? color : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: isSelected ? Colors.white : Colors.grey),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? Colors.white : Colors.grey.shade700,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    </div>
 
-  static Widget _buildPassabilityStatus({
-    required String title,
-    required String subtitle,
-    required Color color,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 28),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF4B5563)),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+    <!-- ================================================================= -->
+    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE) -->
+    <!-- ================================================================= -->
+    <div id="page-add" class="hidden space-y-4">
 
-// Sub-widgets สำหรับรายการคู่มือ
-class _ChecklistTile extends StatelessWidget {
-  final String text;
-  const _ChecklistTile({required this.text});
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+        <div>
+          <h2 class="font-bold text-slate-800 text-base">📍 ปักหมุดรายงานตำแหน่ง (จ.ราชบุรี)</h2>
+          <p class="text-xs text-slate-500">แตะบนแผนที่เพื่อเลือกจุดที่คุณต้องการรายงาน</p>
+        </div>
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          const Icon(Icons.check_box_outlined, size: 18, color: Color(0xFF2B5B84)),
-          const SizedBox(width: 8),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
-        ],
-      ),
-    );
-  }
-}
+        <!-- แผนที่ Interactive -->
+        <div id="map" class="w-full h-60 rounded-xl border border-slate-300 z-10"></div>
+        <p class="text-[11px] text-slate-400">พิกัดที่เลือก: <span id="selected-coords" class="font-mono text-slate-600">ยังไม่ได้คลิกเลือก</span></p>
 
-class _GuideBullet extends StatelessWidget {
-  final String text;
-  const _GuideBullet({required this.text});
+        <!-- ฟอร์มกรอกข้อมูล -->
+        <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-3 pt-2 border-t">
+          
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อสถานที่ / จุดสังเกต</label>
+            <input type="text" id="pin-title" placeholder="เช่น สะพานข้ามแม่น้ำแม่กลอง, หน้าโรงเรียน..." required
+              class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500">
+          </div>
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('• ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
-        ],
-      ),
-    );
-  }
-}
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">อำเภอ</label>
+            <select id="pin-district" required class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
+              <option value="เมืองราชบุรี">เมืองราชบุรี</option>
+              <option value="โพธาราม">โพธาราม</option>
+              <option value="บ้านโป่ง">บ้านโป่ง</option>
+              <option value="ดำเนินสะดวก">ดำเนินสะดวก</option>
+              <option value="บางแพ">บางแพ</option>
+              <option value="สวนผึ้ง">สวนผึ้ง</option>
+              <option value="จอมบึง">จอมบึง</option>
+              <option value="วัดเพลง">วัดเพลง</option>
+              <option value="ปากท่อ">ปากท่อ</option>
+              <option value="บ้านคา">บ้านคา</option>
+            </select>
+          </div>
+
+          <!-- เลือกความรุนแรง 4 ระดับ (พร้อมคำอธิบายแบบละเอียด) -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">เลือกระดับสถานการณ์น้ำ (4 ระดับ)</label>
+            <div class="space-y-2 text-xs">
+              
+              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-emerald-50/50 transition">
+                <input type="radio" name="water-level" value="1" checked onchange="togglePhotoRequirement()" class="mt-0.5 text-emerald-600">
+                <div>
+                  <div class="flex items-center gap-1.5 font-bold text-emerald-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    ระดับ 1: ปกติ / แห้งแล้ง
+                  </div>
+                  <p class="text-[11px] text-slate-500">ปริมาณน้ำน้อย แห้งแล้ง ไม่มีน้ำท่วมขังในบริเวณนั้น หรือไร่นาขาดน้ำ</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-amber-50/50 transition">
+                <input type="radio" name="water-level" value="2" onchange="togglePhotoRequirement()" class="mt-0.5 text-amber-600">
+                <div>
+                  <div class="flex items-center gap-1.5 font-bold text-amber-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    ระดับ 2: เฝ้าระวัง / เริ่มท่วมขัง
+                  </div>
+                  <p class="text-[11px] text-slate-500">ระดับน้ำสูงปริ่มตลิ่ง มีน้ำท่วมขังตามขอบทางขรุขระ เริ่มส่งผลกระทบเล็กน้อย</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-orange-50/50 transition">
+                <input type="radio" name="water-level" value="3" onchange="togglePhotoRequirement()" class="mt-0.5 text-orange-600">
+                <div>
+                  <div class="flex items-center gap-1.5 font-bold text-orange-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                    ระดับ 3: เตือนภัย / น้ำท่วมสูง
+                  </div>
+                  <p class="text-[11px] text-slate-500">เอ่อล้นเข้าบ้านเรือน/ถนน รถเล็กสัญจรไม่ได้ ให้เตรียมยกทรัพย์สินขึ้นที่สูง</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-2.5 border rounded-xl cursor-pointer hover:bg-rose-50/50 transition">
+                <input type="radio" name="water-level" value="4" onchange="togglePhotoRequirement()" class="mt-0.5 text-rose-600">
+                <div>
+                  <div class="flex items-center gap-1.5 font-bold text-rose-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    ระดับ 4: วิกฤต / ท่วมหนักมาก
+                  </div>
+                  <p class="text-[11px] text-slate-500">ระดับน้ำสูงมาก กระแสน้ำเชี่ยว เป็นอันตรายถึงชีวิต ต้องอพยพทันที</p>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- ช่องถ่ายรูป / อัปโหลดภาพถ่ายหลักฐาน (เพื่อป้องกันการกดเล่น) -->
+          <div id="photo-upload-box" class="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-2">
+            <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+              <span class="flex items-center gap-1">
+                <i data-lucide="camera" class="w-4 h-4 text-sky-600"></i>
+                ถ่ายภาพหลักฐานสถานที่จริง
+              </span>
+              <span id="photo-required-label" class="text-[10px] text-slate-400">(ไม่บังคับ)</span>
+            </label>
+            <input type="file" id="pin-photo" accept="image/*" capture="environment" onchange="previewImage(event)"
+              class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+            <!-- แสดงตัวอย่างภาพ -->
+            <div id="image-preview-container" class="hidden mt-2">
+              <img id="image-preview" src="#" alt="ตัวอย่างรูปถ่าย" class="w-full h-36 object-cover rounded-lg border">
+            </div>
+            <p class="text-[10px] text-amber-600 font-medium">* กรณีเลือกระดับเตือนภัย/วิกฤต จำเป็นต้องถ่ายรูปเพื่อยืนยัน ป้องกันการปักหมุดเท็จ</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดเพิ่มเติม</label>
+            <textarea id="pin-detail" rows="2" placeholder="เช่น บริเวณนี้แห้งมากไม่มีน้ำในนาเลย หรือ มีน้ำสูงประมาณ 30 ซม."
+              class="w-full px-3 py-2 text-xs border rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow transition">
+            ยันยันการปักหมุด
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ================= MODAL แสดงรายละเอียดหมุด ================= -->
+  <div id="detail-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity">
+    <div class="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3 shadow-2xl transform scale-95 transition-transform" id="detail-modal-box">
+      <div class="flex justify-between items-start">
+        <span id="modal-level-badge" class="px-2.5 py-1 text-xs font-bold rounded-full">ระดับ</span>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <div>
+        <h3 id="modal-title" class="font-bold text-slate-800 text-base">ชื่อสถานที่</h3>
+        <p id="modal-district" class="text-xs text-slate-500">อ.เมืองราชบุรี</p>
+      </div>
+
+      <!-- แสดงภาพถ่ายจากสถานที่จริง -->
+      <div id="modal-photo-container" class="hidden">
+        <p class="text-[11px] font-bold text-slate-600 mb-1">📷 รูปถ่ายจากพื้นที่จริง:</p>
+        <img id="modal-photo" src="" class="w-full h-44 object-cover rounded-xl border">
+      </div>
+
+      <div class="p-3 bg-slate-50 rounded-xl border text-xs text-slate-600 space-y-1">
+        <p><strong>รายละเอียด:</strong> <span id="modal-detail">...</span></p>
+        <p><strong>พิกัด:</strong> <span id="modal-coords" class="font-mono text-[11px]">...</span></p>
+      </div>
+
+      <a id="modal-gmap-link" href="#" target="_blank" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition">
+        <i data-lucide="map" class="w-4 h-4"></i>
+        เปิดตำแหน่งบน Google Maps
+      </a>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    lucide.createIcons();
+
+    // รายการหมุดเริ่มต้น (กำหนดเป็น Array ว่างไว้เพื่อไม่ให้มีหมุดค้าง)
+    let pins = [];
+    let uploadedImageBase64 = null;
+
+    let map = null;
+    let tempMarker = null;
+    let selectedLat = 13.5385; // ศูนย์กลางราชบุรี
+    let selectedLng = 99.8180;
+
+    const levelConfig = {
+      1: { name: "ระดับ 1: ปกติ / แห้งแล้ง", bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
+      2: { name: "ระดับ 2: เฝ้าระวัง / ท่วมเล็กน้อย", bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-200" },
+      3: { name: "ระดับ 3: เตือนภัย / ท่วมสูง", bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200" },
+      4: { name: "ระดับ 4: วิกฤต / ท่วมหนักมาก", bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" }
+    };
+
+    window.onload = function() {
+      renderPinList();
+    };
+
+    function switchPage(page) {
+      const pageMain = document.getElementById('page-main');
+      const pageAdd = document.getElementById('page-add');
+      const btnMain = document.getElementById('btn-tab-main');
+      const btnAdd = document.getElementById('btn-tab-add');
+
+      if (page === 'main') {
+        pageMain.classList.remove('hidden');
+        pageAdd.classList.add('hidden');
+        btnMain.className = "px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition";
+        btnAdd.className = "px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition";
+      } else {
+        pageMain.classList.add('hidden');
+        pageAdd.classList.remove('hidden');
+        btnAdd.className = "px-3 py-1.5 rounded-lg font-medium bg-white text-sky-800 shadow transition";
+        btnMain.className = "px-3 py-1.5 rounded-lg font-medium text-sky-100 hover:text-white transition";
+        initMap();
+      }
+    }
+
+    function initMap() {
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 200);
+        return;
+      }
+
+      map = L.map('map').setView([13.5385, 99.8180], 11);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      map.on('click', function(e) {
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng;
+
+        document.getElementById('selected-coords').innerText = `${selectedLat.toFixed(5)}, ${selectedLng.toFixed(5)}`;
+
+        if (tempMarker) {
+          tempMarker.setLatLng(e.latlng);
+        } else {
+          tempMarker = L.marker(e.latlng).addTo(map);
+        }
+      });
+    }
+
+    // สลับข้อความ บังคับรูปถ่าย หากเลือกระดับ 3 หรือ 4
+    function togglePhotoRequirement() {
+      const level = parseInt(document.querySelector('input[name="water-level"]:checked').value);
+      const label = document.getElementById('photo-required-label');
+      
+      if (level >= 3) {
+        label.innerText = "(จำเป็นต้องถ่ายรูปป้องกันปักเล่น)";
+        label.className = "text-[10px] text-rose-600 font-bold";
+      } else {
+        label.innerText = "(ไม่บังคับ)";
+        label.className = "text-[10px] text-slate-400";
+      }
+    }
+
+    // พรีวิวรูปภาพเมื่อผู้ใช้ถ่าย/เลือกรูป
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImageBase64 = e.target.result;
+          document.getElementById('image-preview').src = uploadedImageBase64;
+          document.getElementById('image-preview-container').classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // แสดงรายการหมุดในหน้าหลัก
+    function renderPinList() {
+      const pinListEl = document.getElementById('pin-list');
+      
+      if (pins.length === 0) {
+        pinListEl.innerHTML = `
+          <div class="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl">
+            <i data-lucide="map-pin-off" class="w-8 h-8 text-slate-300 mx-auto mb-1"></i>
+            <p class="text-xs text-slate-400">ยังไม่มีการปักหมุดแจ้งเตือนในขณะนี้</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">กดปุ่ม "+ ปักหมุดเพิ่ม" ด้านบนเพื่อเริ่มรายงานจุดแรก</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      pinListEl.innerHTML = '';
+      pins.forEach(pin => {
+        const config = levelConfig[pin.level];
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border ${config.border} hover:shadow-md transition cursor-pointer flex justify-between items-center bg-white`;
+        card.onclick = () => openDetailModal(pin);
+
+        card.innerHTML = `
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs text-slate-800">${pin.title}</span>
+              ${pin.photo ? '<i data-lucide="image" class="w-3.5 h-3.5 text-sky-600"></i>' : ''}
+            </div>
+            <p class="text-[11px] text-slate-500">อ.${pin.district} • ${pin.detail}</p>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-1 rounded-full ${config.bg} ${config.text} whitespace-nowrap">
+            ${config.name}
+          </span>
+        `;
+        pinListEl.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // บันทึกหมุดใหม่
+    function savePin(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('pin-title').value;
+      const district = document.getElementById('pin-district').value;
+      const level = parseInt(document.querySelector('input[name="water-level"]:checked').value);
+      const detail = document.getElementById('pin-detail').value || "ไม่มีรายละเอียดเพิ่มเติม";
+
+      // ตรวจสอบหลักฐานรูปถ่ายหากเลือกระดับ 3 หรือ 4
+      if (level >= 3 && !uploadedImageBase64) {
+        alert("⚠️ เพื่อป้องกันการปักหมุดเล่น ในระดับเตือนภัย/วิกฤต จำเป็นต้องแนบภาพถ่ายสถานที่จริงครับ!");
+        return;
+      }
+
+      const newPin = {
+        id: Date.now(),
+        title: title,
+        district: district,
+        level: level,
+        detail: detail,
+        photo: uploadedImageBase64,
+        lat: selectedLat,
+        lng: selectedLng
+      };
+
+      pins.unshift(newPin); // เอาอันล่าสุดขึ้นก่อน
+      renderPinList();
+
+      // ลบหมุดชั่วคราวบนแผนที่
+      if (map && tempMarker) {
+        L.marker([selectedLat, selectedLng]).addTo(map).bindPopup(`<b>${title}</b>`);
+      }
+
+      // รีเซ็ตฟอร์ม
+      document.getElementById('add-pin-form').reset();
+      document.getElementById('image-preview-container').classList.add('hidden');
+      uploadedImageBase64 = null;
+
+      alert("ปักหมุดรายงานสำเร็จ! ข้อมูลถูกนำไปแสดงผลบนหน้าหลักเรียบร้อยแล้ว");
+      switchPage('main');
+    }
+
+    // เปิด Modal แสดงรายละเอียดเมื่อกดดูหมุด
+    function openDetailModal(pin) {
+      const config = levelConfig[pin.level];
+      document.getElementById('modal-title').innerText = pin.title;
+      document.getElementById('modal-district').innerText = `อำเภอ${pin.district}, จังหวัดราชบุรี`;
+      document.getElementById('modal-detail').innerText = pin.detail;
+      document.getElementById('modal-coords').innerText = `${pin.lat.toFixed(5)}, ${pin.lng.toFixed(5)}`;
+      
+      const badge = document.getElementById('modal-level-badge');
+      badge.innerText = config.name;
+      badge.className = `px-2.5 py-1 text-xs font-bold rounded-full ${config.bg} ${config.text}`;
+
+      // แสดงรูปถ่ายถ้ามี
+      const photoContainer = document.getElementById('modal-photo-container');
+      const photoImg = document.getElementById('modal-photo');
+      if (pin.photo) {
+        photoImg.src = pin.photo;
+        photoContainer.classList.remove('hidden');
+      } else {
+        photoContainer.classList.add('hidden');
+      }
+
+      document.getElementById('modal-gmap-link').href = `https://www.google.com/maps?q=${pin.lat},${pin.lng}`;
+
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDetailModal() {
+      const modal = document.getElementById('detail-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+  </script>
+</body>
+</html>
