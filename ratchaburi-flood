@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบติดตามสถานการณ์น้ำและพื้นที่เสี่ยงอุทกภัย จ.ราชบุรี</title>
+    <style>
+        body { font-family: 'Tohoma', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1b4965; text-align: center; }
+        .alert-box { background-color: #fff3cd; border-left: 6px solid #ffecb5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #62b6cb; color: white; }
+        .risk-high { color: #d90429; font-weight: bold; }
+        .risk-medium { color: #f77f00; font-weight: bold; }
+        .risk-low { color: #2a9d8f; font-weight: bold; }
+        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌊 รายงานสถานการณ์น้ำ & พื้นที่เสี่ยงอุทกภัย จ.ราชบุรี</h1>
+    
+    <div class="alert-box">
+        ⚠️ **แจ้งเตือน:** พื่นที่ลุ่มต่ำริมแม่น้ำแม่กลองให้เฝ้าระวังระดับน้ำอย่างใกล้ชิด
+    </div>
+
+    <input type="text" id="searchInput" class="search-box" onkeyup="filterTable()" placeholder="ค้นหาชื่ออำเภอ หรือพื้นที่...">
+
+    <table id="floodTable">
+        <thead>
+            <tr>
+                <th>พื้นที่ / อำเภอ</th>
+                <th>ระดับน้ำขังปัจจุบัน</th>
+                <th>โอกาสเกิดอุทกภัย (%)</th>
+                <th>ระดับความเสี่ยง</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>อ.เมืองราชบุรี (ต.หน้าเมือง)</td>
+                <td>15 ซม.</td>
+                <td>75%</td>
+                <td class="risk-high">สูงมาก</td>
+            </tr>
+            <tr>
+                <td>อ.โพธาราม (พื้นที่ลุ่มต่ำริมน้ำ)</td>
+                <td>5 ซม.</td>
+                <td>50%</td>
+                <td class="risk-medium">ปานกลาง</td>
+            </tr>
+            <tr>
+                <td>อ.บ้านโป่ง</td>
+                <td>0 ซม.</td>
+                <td>30%</td>
+                <td class="risk-low">ต่ำ</td>
+            </tr>
+            <tr>
+                <td>อ.จอมบึง</td>
+                <td>0 ซม.</td>
+                <td>15%</td>
+                <td class="risk-low">ต่ำ</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function filterTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let rows = document.querySelectorAll("#floodTable tbody tr");
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+    });
+}
+</script>
+
+</body>
+</html>
