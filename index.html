@@ -94,28 +94,33 @@
           </div>
           <span>พื้นที่เฝ้าระวัง: <strong class="text-slate-900">จังหวัดราชบุรี (10 อำเภอ)</strong></span>
         </div>
-        <div class="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100/80 w-fit text-[11px]">
-          <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
-          <span id="last-updated-time">อัปเดตล่าสุด: -</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100/80 text-[11px]">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span id="last-updated-time">อัปเดตล่าสุด: -</span>
+          </div>
+          <div class="text-[10px] font-semibold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100" id="next-update-timer">
+            รีเฟรชใน: 60:00
+          </div>
         </div>
       </div>
 
-      <!-- Weather Banner -->
+      <!-- Weather Banner (เปลี่ยนค่าแบบ Dynamic) -->
       <div class="bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white p-6 rounded-3xl shadow-lg shadow-sky-500/10 flex justify-between items-center relative overflow-hidden">
         <div class="space-y-1 relative z-10">
-          <span class="text-[11px] font-semibold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-wider">ภาพรวมวันนี้</span>
-          <h2 class="text-4xl font-black mt-2 tracking-tight">32°C</h2>
-          <p class="text-xs text-sky-100/90 font-normal pt-1">ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่</p>
+          <span class="text-[11px] font-semibold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-wider">ภาพรวมสภาพอากาศรายชั่วโมง</span>
+          <h2 class="text-4xl font-black mt-2 tracking-tight" id="weather-temp">32°C</h2>
+          <p class="text-xs text-sky-100/90 font-normal pt-1" id="weather-desc">ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่</p>
         </div>
-        <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+        <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20" id="weather-icon-box">
           <i data-lucide="cloud-rain" class="w-9 h-9 text-white"></i>
         </div>
       </div>
 
-      <!-- Dual Risk Cards (Flood % & PM 2.5) -->
+      <!-- Dual Risk Cards (ทั้ง 10 อำเภอ) -->
       <div class="grid md:grid-cols-2 gap-5">
 
-        <!-- Card 1: Flood Risk -->
+        <!-- Card 1: Flood Risk (10 อำเภอ) -->
         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div class="flex justify-between items-center border-b border-slate-100/80 pb-3">
             <div class="flex items-center gap-2.5">
@@ -124,50 +129,15 @@
               </div>
               <h3 class="font-bold text-slate-800 text-sm">โอกาสเกิดอุทกภัย (%)</h3>
             </div>
-            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">รายอำเภอ</span>
+            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">ครบ 10 อำเภอ</span>
           </div>
 
-          <div class="space-y-3 text-xs">
-            <div class="space-y-1">
-              <div class="flex justify-between font-medium text-slate-700">
-                <span>1. อ.เมืองราชบุรี</span>
-                <span class="font-bold text-amber-600">45%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
-              </div>
-            </div>
-            <div class="space-y-1">
-              <div class="flex justify-between font-medium text-slate-700">
-                <span>2. อ.โพธาราม</span>
-                <span class="font-bold text-amber-600">50%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-amber-500 h-full rounded-full" style="width: 50%"></div>
-              </div>
-            </div>
-            <div class="space-y-1">
-              <div class="flex justify-between font-medium text-slate-700">
-                <span>3. อ.ดำเนินสะดวก</span>
-                <span class="font-bold text-rose-500">65%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-rose-500 h-full rounded-full" style="width: 65%"></div>
-              </div>
-            </div>
-            <div class="space-y-1">
-              <div class="flex justify-between font-medium text-slate-700">
-                <span>4. อ.สวนผึ้ง</span>
-                <span class="font-bold text-rose-500">70%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-rose-500 h-full rounded-full" style="width: 70%"></div>
-              </div>
-            </div>
+          <div class="space-y-2.5 text-xs max-h-[360px] overflow-y-auto pr-1" id="flood-list-container">
+            <!-- Render ครบ 10 อำเภอด้วย JS -->
           </div>
         </div>
 
-        <!-- Card 2: PM 2.5 Status -->
+        <!-- Card 2: PM 2.5 Status (10 อำเภอ) -->
         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div class="flex justify-between items-center border-b border-slate-100/80 pb-3">
             <div class="flex items-center gap-2.5">
@@ -176,32 +146,17 @@
               </div>
               <h3 class="font-bold text-slate-800 text-sm">สถานการณ์ฝุ่น PM 2.5</h3>
             </div>
-            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">รายอำเภอ</span>
+            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">ครบ 10 อำเภอ</span>
           </div>
 
-          <div class="space-y-2.5 text-xs">
-            <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
-              <span class="font-medium text-slate-700">1. อ.เมืองราชบุรี</span>
-              <span class="font-bold text-slate-700">28 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">คุณภาพดี</span></span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
-              <span class="font-medium text-slate-700">2. อ.โพธาราม</span>
-              <span class="font-bold text-slate-700">42 µg/m³ <span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-semibold ml-1">เริ่มมีผล</span></span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
-              <span class="font-medium text-slate-700">3. อ.ดำเนินสะดวก</span>
-              <span class="font-bold text-slate-700">20 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">คุณภาพดี</span></span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
-              <span class="font-medium text-slate-700">4. อ.สวนผึ้ง</span>
-              <span class="font-bold text-slate-700">12 µg/m³ <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">อากาศดีมาก</span></span>
-            </div>
+          <div class="space-y-2 text-xs max-h-[360px] overflow-y-auto pr-1" id="pm25-list-container">
+            <!-- Render ครบ 10 อำเภอด้วย JS -->
           </div>
         </div>
 
       </div>
 
-      <!-- Preparedness & Checklist (Modern Minimal Redesign) -->
+      <!-- Preparedness & Checklist -->
       <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
         <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
           <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -214,7 +169,6 @@
         </div>
 
         <div class="grid md:grid-cols-2 gap-4">
-          <!-- สิ่งที่ต้องเตรียม -->
           <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 space-y-3">
             <div class="flex items-center gap-2">
               <div class="w-7 h-7 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center">
@@ -242,7 +196,6 @@
             </ul>
           </div>
 
-          <!-- สิ่งที่ต้องทำ -->
           <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 space-y-3">
             <div class="flex items-center gap-2">
               <div class="w-7 h-7 rounded-xl bg-amber-100/70 text-amber-600 flex items-center justify-center">
@@ -261,7 +214,7 @@
               </li>
               <li class="flex items-start gap-2">
                 <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
-                <span>ติดตามประกาศเตือนภัยจากทางอำเภอใกล้ชิด</span>
+                <span>ติดตามประกาศเตือนภัยจากทางอำเภออย่างใกล้ชิด</span>
               </li>
               <li class="flex items-start gap-2">
                 <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
@@ -275,7 +228,7 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE WITH CUSTOM MODERN MAP PIN) -->
+    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE WITH MODERN MAP PIN) -->
     <!-- ================================================================= -->
     <div id="page-add" class="hidden max-w-xl mx-auto bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -288,19 +241,15 @@
         </div>
       </div>
 
-      <!-- Map Display -->
       <div id="map" class="w-full h-60 rounded-2xl border border-slate-200/80 z-10 shadow-inner"></div>
       <p class="text-[11px] text-slate-400 font-medium">พิกัดที่เลือก: <span id="selected-coords" class="font-mono text-slate-600">ยังไม่ได้คลิกเลือก</span></p>
 
       <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-5">
-        
-        <!-- Modern Single-Select Radio Cards -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-2.5">
             แนวโน้มระดับน้ำในขณะนี้ <span class="text-rose-500 font-semibold">* (เลือกได้ 1 ตัวเลือก)</span>
           </label>
           <div class="grid grid-cols-3 gap-3">
-            
             <label class="relative flex flex-col items-center p-3.5 rounded-2xl border border-slate-200/80 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition-all text-center group">
               <input type="radio" name="water-trend" value="decreasing" checked class="peer hidden">
               <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white flex items-center justify-center transition-all mb-1.5">
@@ -327,7 +276,6 @@
               <span class="font-bold text-xs text-slate-700 peer-checked:text-rose-700">น้ำเพิ่มขึ้น</span>
               <span class="text-[10px] text-slate-400 mt-0.5">เริ่มเอ่อล้น/เพิ่มสูง</span>
             </label>
-
           </div>
         </div>
 
@@ -346,24 +294,115 @@
         <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-500/20 transition-all">
           ยืนยันการปักหมุด
         </button>
-
       </form>
     </div>
 
   </div>
 
-  <!-- JavaScript -->
+  <!-- JavaScript logic สำหรับเปลี่ยนข้อมูลทุก 1 ชั่วโมง และรองรับทั้ง 10 อำเภอ -->
   <script>
-    lucide.createIcons();
+    // รายชื่อทั้ง 10 อำเภอในจังหวัดราชบุรี
+    const ratchaburiDistricts = [
+      "อ.เมืองราชบุรี", "อ.บ้านโป่ง", "อ.โพธาราม", "อ.ดำเนินสะดวก", "อ.ปากท่อ",
+      "อ.จอมบึง", "อ.สวนผึ้ง", "อ.บางแพ", "อ.วัดเพลง", "อ.บ้านคา"
+    ];
+
+    // รายการสภาพอากาศสุ่มจำลองตามชั่วโมง
+    const weatherPresets = [
+      { temp: "31°C", desc: "ท้องฟ้าแจ่มใส มีแดดจัดและลมพัดเบาๆ", icon: "sun" },
+      { temp: "33°C", desc: "ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่", icon: "cloud-rain" },
+      { temp: "29°C", desc: "มีฝนตกเล็กน้อยกระจายบางพื้นที่ ลมกระโชกแรง", icon: "cloud-drizzle" },
+      { temp: "34°C", desc: "อากาศร้อนจัด มีเมฆบางส่วน ความชื้นสูง", icon: "sun-medium" },
+      { temp: "28°C", desc: "ฟ้ามืดครึ้ม อากาศชื้น มีโอกาสเกิดฝนตกหนัก", icon: "cloud-lightning" }
+    ];
 
     let map = null;
     let tempMarker = null;
+    let secondsLeft = 3600; // 1 ชั่วโมง = 3600 วินาที
 
     window.onload = function() {
+      updateHourlyData();
+      startHourlyTimer();
+      lucide.createIcons();
+    };
+
+    // ฟังก์ชันอัปเดตข้อมูลจำลองทุก 1 ชั่วโมง
+    function updateHourlyData() {
       const now = new Date();
       const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       document.getElementById('last-updated-time').innerText = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH', options)} น.`;
-    };
+
+      // 1. สุ่มสภาพอากาศ
+      const randomWeather = weatherPresets[Math.floor(Math.random() * weatherPresets.length)];
+      document.getElementById('weather-temp').innerText = randomWeather.temp;
+      document.getElementById('weather-desc').innerText = randomWeather.desc;
+      document.getElementById('weather-icon-box').innerHTML = `<i data-lucide="${randomWeather.icon}" class="w-9 h-9 text-white"></i>`;
+
+      // 2. สุ่มข้อมูลโอกาสอุทกภัย 10 อำเภอ
+      const floodContainer = document.getElementById('flood-list-container');
+      floodContainer.innerHTML = '';
+      
+      ratchaburiDistricts.forEach((district, index) => {
+        const percent = Math.floor(Math.random() * 65) + 15; // สุ่มระหว่าง 15% - 80%
+        const isHigh = percent >= 55;
+        const colorClass = isHigh ? 'text-rose-500' : 'text-amber-600';
+        const bgBarClass = isHigh ? 'bg-rose-500' : 'bg-amber-500';
+
+        const itemHTML = `
+          <div class="space-y-1">
+            <div class="flex justify-between font-medium text-slate-700">
+              <span>${index + 1}. ${district}</span>
+              <span class="font-bold ${colorClass}">${percent}%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div class="${bgBarClass} h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+            </div>
+          </div>
+        `;
+        floodContainer.innerHTML += itemHTML;
+      });
+
+      // 3. สุ่มข้อมูล PM2.5 ทั้ง 10 อำเภอ
+      const pm25Container = document.getElementById('pm25-list-container');
+      pm25Container.innerHTML = '';
+
+      ratchaburiDistricts.forEach((district, index) => {
+        const pmValue = Math.floor(Math.random() * 45) + 10; // สุ่มระหว่าง 10 - 55 µg/m³
+        let statusBadge = '';
+
+        if (pmValue <= 20) {
+          statusBadge = `<span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">อากาศดีมาก</span>`;
+        } else if (pmValue <= 37) {
+          statusBadge = `<span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">คุณภาพดี</span>`;
+        } else {
+          statusBadge = `<span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-semibold ml-1">เริ่มมีผล</span>`;
+        }
+
+        const pmHTML = `
+          <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
+            <span class="font-medium text-slate-700">${index + 1}. ${district}</span>
+            <span class="font-bold text-slate-700">${pmValue} µg/m³ ${statusBadge}</span>
+          </div>
+        `;
+        pm25Container.innerHTML += pmHTML;
+      });
+
+      lucide.createIcons();
+    }
+
+    // ตัวนับเวลาถอยหลัง 1 ชั่วโมงเพื่ออัปเดตอัตโนมัติ
+    function startHourlyTimer() {
+      setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+          secondsLeft = 3600;
+          updateHourlyData();
+        }
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        document.getElementById('next-update-timer').innerText = `รีเฟรชใน: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
 
     function switchPage(page) {
       const pageMain = document.getElementById('page-main');
@@ -391,7 +430,6 @@
         return;
       }
 
-      // พิกัดใจกลางจังหวัดราชบุรี
       map = L.map('map').setView([13.5385, 99.8180], 11);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -399,7 +437,6 @@
         attribution: '© OpenStreetMap'
       }).addTo(map);
 
-      // สร้าง Custom Leaflet Marker HTML ที่สวยงามและปังที่สุด
       const modernPinIcon = L.divIcon({
         className: 'custom-pin-marker',
         html: `
