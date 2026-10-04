@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบข้อมูลและเตรียมพร้อมรับมืออุทกภัย</title>
+    <title>ระบบติดตามสถานการณ์และแจ้งเตือนอุทกภัย จังหวัดราชบุรี</title>
+    <!-- Leaflet CSS สำหรับระบบแผนที่ปักหมุด -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Tohoma', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tahoma', 'Segoe UI', Geneva, Verdana, sans-serif;
         }
         body {
             background-color: #f0f4f8;
@@ -24,7 +26,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .container {
-            max-width: 1000px;
+            max-width: 1050px;
             margin: 20px auto;
             padding: 0 15px;
         }
@@ -41,10 +43,97 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
-        /* Hotline Grid */
-        .hotline-grid {
+
+        /* 1. ส่วนเปอร์เซ็นต์สถานการณ์ภาพรวม */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        .status-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .status-box h3 {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+        .percent-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 5px 0;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #2563eb;
+            transition: width 0.3s ease;
+        }
+
+        /* 2. ส่วนสถานการณ์แยกตาม 10 อำเภอในจังหวัดราชบุรี */
+        .district-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .district-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .district-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .district-title {
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* 3. ส่วนแผนที่ / ปักหมุดตำแหน่ง */
+        #map {
+            height: 380px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .pin-controls {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* 4. เบอร์ด่วนส่วนกลาง */
+        .hotline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
         .hotline-item {
@@ -54,7 +143,7 @@
             border-radius: 6px;
         }
         .hotline-item h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #1e40af;
         }
         .hotline-item p {
@@ -62,10 +151,11 @@
             font-weight: bold;
             color: #dc2626;
         }
-        /* Preparation List */
+
+        /* 5. สิ่งที่ต้องเตรียม */
         .prep-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 15px;
         }
         .prep-box {
@@ -77,8 +167,6 @@
         .prep-box h3 {
             color: #0f172a;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
         }
         .prep-box ul {
             list-style-type: disc;
@@ -87,7 +175,8 @@
         .prep-box li {
             margin-bottom: 5px;
         }
-        /* Action Steps */
+
+        /* 6. สิ่งที่ต้องทำ */
         .step-container {
             display: flex;
             flex-direction: column;
@@ -114,23 +203,156 @@
             font-weight: bold;
             flex-shrink: 0;
         }
-        .step-content h4 {
-            color: #1e293b;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>ศูนย์เตรียมความพร้อมและรับมืออุทกภัย</h1>
-        <p>ข้อมูลปฏิบัติการและสายด่วนส่วนกลาง</p>
+        <h1>ศูนย์ติดตามสถานการณ์และแจ้งเตือนอุทกภัย</h1>
+        <p>ระดับความเสี่ยง 10 อำเภอ จ.ราชบุรี | ระบบปักหมุดแจ้งเหตุ | เบอร์ติดต่อส่วนกลาง</p>
     </header>
 
     <div class="container">
 
-        <!-- เบอร์ด่วนส่วนกลาง -->
+        <!-- 1. ส่วนเปอร์เซ็นต์สถานการณ์ภาพรวม -->
         <div class="card">
-            <h2>📞 เบอร์ด่วนส่วนกลาง (แจ้งเหตุ & ขอความช่วยเหลือ)</h2>
+            <h2>📊 เปอร์เซ็นต์สถานการณ์ภาพรวม</h2>
+            <div class="status-grid">
+                <div class="status-box">
+                    <h3>ปริมาณน้ำฝนสะสมภาพรวม</h3>
+                    <div class="percent-display">75%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 75%; background-color: #eab308;"></div>
+                    </div>
+                </div>
+                <div class="status-box">
+                    <h3>ความจุลำน้ำ/การระบาย</h3>
+                    <div class="percent-display">82%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 82%; background-color: #f97316;"></div>
+                    </div>
+                </div>
+                <div class="status-box">
+                    <h3>ระดับความเสี่ยงภาพรวม</h3>
+                    <div class="percent-display" style="color: #dc2626;">60%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 60%; background-color: #dc2626;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. สถานการณ์ความเสี่ยงอุทกภัยแยกตาม 10 อำเภอในจังหวัดราชบุรี -->
+        <div class="card">
+            <h2>🏔️ ความเสี่ยงอุทกภัยจำแนกตามรายอำเภอ (จังหวัดราชบุรี)</h2>
+            <div class="district-grid">
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">1. อ.โพธาราม</span>
+                        <span style="color: #dc2626; font-weight: bold;">75%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 75%; background-color: #dc2626;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">2. อ.เมืองราชบุรี</span>
+                        <span style="color: #ea580c; font-weight: bold;">70%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 70%; background-color: #ea580c;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">3. อ.บ้านโป่ง</span>
+                        <span style="color: #ea580c; font-weight: bold;">68%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 68%; background-color: #ea580c;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">4. อ.ดำเนินสะดวก</span>
+                        <span style="color: #ea580c; font-weight: bold;">65%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 65%; background-color: #ea580c;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">5. อ.บางแพ</span>
+                        <span style="color: #ca8a04; font-weight: bold;">55%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 55%; background-color: #ca8a04;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">6. อ.จอมบึง</span>
+                        <span style="color: #ca8a04; font-weight: bold;">48%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 48%; background-color: #ca8a04;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">7. อ.ปากท่อ</span>
+                        <span style="color: #ca8a04; font-weight: bold;">45%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 45%; background-color: #ca8a04;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">8. อ.สวนผึ้ง</span>
+                        <span style="color: #16a34a; font-weight: bold;">35%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 35%; background-color: #16a34a;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">9. อ.วัดเพลง</span>
+                        <span style="color: #16a34a; font-weight: bold;">30%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 30%; background-color: #16a34a;"></div>
+                    </div>
+                </div>
+                <div class="district-card">
+                    <div class="district-header">
+                        <span class="district-title">10. อ.บ้านคา</span>
+                        <span style="color: #16a34a; font-weight: bold;">25%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: 25%; background-color: #16a34a;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. ส่วนปักหมุดตำแหน่ง / แผนที่ -->
+        <div class="card">
+            <h2>📍 ระบบปักหมุดพื้นที่ / แจ้งจุดเสี่ยง</h2>
+            <div class="pin-controls">
+                <button class="btn" onclick="locateUser()">📌 ใช้ตำแหน่งปัจจุบันของฉัน</button>
+                <button class="btn" style="background-color: #059669;" onclick="clearPins()">🗑️ ล้างหมุดทั้งหมด</button>
+            </div>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 8px;">* คลิกบนแผนที่เพื่อปักหมุดระบุจุดที่ต้องการติดตามหรือแจ้งเหตุ</p>
+            <div id="map"></div>
+        </div>
+
+        <!-- 4. เบอร์ด่วนส่วนกลาง (ตัดเบอร์ท้องถิ่นจังหวัดราชบุรีออกตามสั่ง) -->
+        <div class="card">
+            <h2>📞 เบอร์ด่วนส่วนกลาง</h2>
             <div class="hotline-grid">
                 <div class="hotline-item">
                     <h3>ปภ. แจ้งเหตุสาธารณภัย</h3>
@@ -159,7 +381,7 @@
             </div>
         </div>
 
-        <!-- สิ่งที่ต้องเตรียม -->
+        <!-- 5. สิ่งที่ต้องเตรียม -->
         <div class="card">
             <h2>🎒 สิ่งที่ต้องเตรียม (ถุงยังชีพ & อุปกรณ์ฉุกเฉิน)</h2>
             <div class="prep-grid">
@@ -168,7 +390,7 @@
                     <ul>
                         <li>น้ำดื่มสะอาด อย่างน้อย 3 ลิตร/คน/วัน</li>
                         <li>อาหารแห้ง อาหารกระป๋อง บะหมี่สำเร็จรูป</li>
-                        <li>ยาสมุนไพร/อาหารที่ไม่ต้องใช้ไฟปรุง</li>
+                        <li>อาหารที่ไม่ต้องใช้ไฟปรุง</li>
                     </ul>
                 </div>
                 <div class="prep-box">
@@ -176,7 +398,7 @@
                     <ul>
                         <li>ยาประจำตัวของผู้ป่วยในบ้าน</li>
                         <li>ชุดปฐมพยาบาล เบตาดีน พลาสเตอร์</li>
-                        <li>ยาใส่แผล ยาทาน้ำกัดเท้า ยาแก้ท้องเสีย</li>
+                        <li>ยาทาน้ำกัดเท้า และยาแก้ท้องเสีย</li>
                     </ul>
                 </div>
                 <div class="prep-box">
@@ -191,36 +413,32 @@
             </div>
         </div>
 
-        <!-- สิ่งที่ต้องทำ -->
+        <!-- 6. สิ่งที่ต้องทำ -->
         <div class="card">
             <h2>📋 สิ่งที่ต้องทำเมื่อเกิดอุทกภัย</h2>
             <div class="step-container">
                 <div class="step-item">
                     <div class="step-badge">1</div>
-                    <div class="step-content">
-                        <h4>เตรียมพร้อมก่อนน้ำมา</h4>
-                        <p>ตัดไฟยกเบรกเกอร์ชั้นล่าง ขนย้ายสิ่งของและเครื่องใช้ไฟฟ้าขึ้นที่สูง หรือชั้น 2 ของบ้าน</p>
+                    <div>
+                        <strong>เตรียมพร้อมก่อนน้ำมา:</strong> ตัดไฟยกเบรกเกอร์ชั้นล่าง ขนย้ายสิ่งของและเครื่องใช้ไฟฟ้าขึ้นที่สูง
                     </div>
                 </div>
                 <div class="step-item">
                     <div class="step-badge">2</div>
-                    <div class="step-content">
-                        <h4>ปฏิบัติตัวขณะน้ำท่วม</h4>
-                        <p>หลีกเลี่ยงการเดิน ลุย หรือสัญจรผ่านกระแสน้ำไหลเชี่ยว ระวังแมลงและสัตว์มีพิษหนีน้ำ</p>
+                    <div>
+                        <strong>ปฏิบัติตัวขณะน้ำท่วม:</strong> หลีกเลี่ยงการเดิน ลุย หรือสัญจรผ่านกระแสน้ำไหลเชี่ยว ระวังแมลงและสัตว์มีพิษ
                     </div>
                 </div>
                 <div class="step-item">
                     <div class="step-badge">3</div>
-                    <div class="step-content">
-                        <h4>การอพยพกรณีฉุกเฉิน</h4>
-                        <p>หากมีคำสั่งอพยพ ให้รีบอพยพตามเส้นทางที่เจ้าหน้าที่กำหนด และแจ้งเบอร์ส่วนกลางเพื่อขอความช่วยเหลือทันที</p>
+                    <div>
+                        <strong>การอพยพกรณีฉุกเฉิน:</strong> หากมีคำสั่งอพยพ ให้รีบอพยพตามเส้นทางที่กำหนด และติดต่อสายด่วนส่วนกลางทันที
                     </div>
                 </div>
                 <div class="step-item">
                     <div class="step-badge">4</div>
-                    <div class="step-content">
-                        <h4>ข้อควรระวังหลังน้ำลด</h4>
-                        <p>อย่าพึ่งเปิดปลั๊กหรือเครื่องใช้ไฟฟ้าจนกว่าจะได้รับการตรวจสอบความปลอดภัยและแห้งสนิท</p>
+                    <div>
+                        <strong>ข้อควรระวังหลังน้ำลด:</strong> ห้ามเปิดสวิตช์หรือเครื่องใช้ไฟฟ้าจนกว่าจะได้รับการตรวจสอบความปลอดภัย
                     </div>
                 </div>
             </div>
@@ -228,5 +446,55 @@
 
     </div>
 
+    <!-- Leaflet JS สำหรับระบบแผนที่ -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // เริ่มต้นสร้างแผนที่ (ตั้งศูนย์กลางไว้ที่จังหวัดราชบุรี)
+        var map = L.map('map').setView([13.5373, 99.8134], 10);
+
+        // โหลดข้อมูลแผนที่ OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var markers = [];
+
+        // ฟังก์ชันเมื่อคลิกบนแผนที่เพื่อปักหมุด
+        function onMapClick(e) {
+            var marker = L.marker(e.latlng).addTo(map)
+                .bindPopup("<b>หมุดปักเตือนภัย</b><br>พิกัด: " + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4))
+                .openPopup();
+            markers.push(marker);
+        }
+        map.on('click', onMapClick);
+
+        // ฟังก์ชันค้นหาตำแหน่งปัจจุบันของผู้ใช้
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    map.setView([lat, lng], 13);
+
+                    var userMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("<b>ตำแหน่งปัจจุบันของคุณ</b>")
+                        .openPopup();
+                    markers.push(userMarker);
+                }, function() {
+                    alert("ไม่สามารถดึงตำแหน่งปัจจุบันของคุณได้ กรุณาเปิดระบบระบุตำแหน่ง GPS");
+                });
+            } else {
+                alert("เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง GPS");
+            }
+        }
+
+        // ฟังก์ชันล้างหมุดทั้งหมด
+        function clearPins() {
+            for (var i = 0; i < markers.length; i++) {
+                map.removeLayer(markers[i]);
+            }
+            markers = [];
+        }
+    </script>
 </body>
 </html>
