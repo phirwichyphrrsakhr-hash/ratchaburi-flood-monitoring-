@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <!-- Weather Banner (เปลี่ยนค่าแบบ Dynamic) -->
+      <!-- Weather Banner -->
       <div class="bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white p-6 rounded-3xl shadow-lg shadow-sky-500/10 flex justify-between items-center relative overflow-hidden">
         <div class="space-y-1 relative z-10">
           <span class="text-[11px] font-semibold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-wider">ภาพรวมสภาพอากาศรายชั่วโมง</span>
@@ -156,6 +156,87 @@
 
       </div>
 
+      <!-- ================================================================= -->
+      <!-- NEW: เบอร์สายด่วนฉุกเฉิน (EMERGENCY HOTLINES SECTION) -->
+      <!-- ================================================================= -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-100">
+              <i data-lucide="phone-call" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-800 text-base">น้ำท่วมมาเมื่อไหร่ มีเบอร์นี้อุ่นใจกว่า</h3>
+              <p class="text-xs text-slate-400">เซฟไว้ ใช้เมื่อต้องการความช่วยเหลือฉุกเฉิน</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full animate-pulse">24 ชั่วโมง</span>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <!-- กลุ่มที่ 1: ขอความช่วยเหลือ -->
+          <div class="space-y-3 bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
+            <div class="flex items-center gap-2 text-purple-800 font-bold text-xs border-b border-purple-100 pb-2">
+              <div class="w-6 h-6 rounded-lg bg-purple-200/80 flex items-center justify-center text-purple-700">
+                <i data-lucide="life-buoy" class="w-3.5 h-3.5"></i>
+              </div>
+              <span>1. ขอความช่วยเหลือ (ศูนย์ช่วยเหลืออุทกภัย)</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <a href="tel:1111" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] text-slate-400 font-medium">ศูนย์ช่วยเหลือผู้ประสบอุทกภัย</span>
+                <span class="text-base font-black text-purple-700 mt-1">1111 <span class="text-xs font-normal text-slate-500">กด 5</span></span>
+              </a>
+              <a href="tel:1784" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] text-slate-400 font-medium">ด่วนนิรภัย ปภ. (แจ้งเหตุฉุกเฉิน)</span>
+                <span class="text-base font-black text-purple-700 mt-1">1784</span>
+              </a>
+              <a href="tel:1677" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] text-slate-400 font-medium">ร่วมด้วยช่วยกัน ประสานช่วยเหลือ</span>
+                <span class="text-base font-black text-purple-700 mt-1">1677</span>
+              </a>
+              <a href="tel:1664" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
+                <span class="text-[10px] text-slate-400 font-medium">สภากาชาดไทย ช่วยเหลือสาธารณภัย</span>
+                <span class="text-base font-black text-purple-700 mt-1">1664</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- กลุ่มที่ 2: แพทย์และความปลอดภัย -->
+          <div class="space-y-3 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100">
+            <div class="flex items-center gap-2 text-emerald-800 font-bold text-xs border-b border-emerald-100 pb-2">
+              <div class="w-6 h-6 rounded-lg bg-emerald-200/80 flex items-center justify-center text-emerald-700">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              </div>
+              <span>2. แพทย์และความปลอดภัย</span>
+            </div>
+            <div class="space-y-2">
+              <a href="tel:1669" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
+                <div>
+                  <div class="text-[11px] font-bold text-slate-700">แพทย์ฉุกเฉิน / รถพยาบาล</div>
+                  <div class="text-[10px] text-slate-400">เหตุฉุกเฉินทางการแพทย์</div>
+                </div>
+                <span class="text-base font-black text-emerald-600">1669</span>
+              </a>
+              <a href="tel:191" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
+                <div>
+                  <div class="text-[11px] font-bold text-slate-700">เหตุด่วนเหตุร้าย (ตำรวจ)</div>
+                  <div class="text-[10px] text-slate-400">ดูแลความปลอดภัยในพื้นที่ภัยพิบัติ</div>
+                </div>
+                <span class="text-base font-black text-emerald-600">191</span>
+              </a>
+              <a href="tel:199" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
+                <div>
+                  <div class="text-[11px] font-bold text-slate-700">ดับเพลิงและกู้ภัย</div>
+                  <div class="text-[10px] text-slate-400">กู้ภัยฉุกเฉิน อัคคีภัย สัตว์มีพิษ</div>
+                </div>
+                <span class="text-base font-black text-emerald-600">199</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Preparedness & Checklist -->
       <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
         <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
@@ -189,10 +270,6 @@
                 <i data-lucide="check" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
                 <span>เอกสารสำคัญใส่ถุงพลาสติกกันน้ำ</span>
               </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
-                <span>ไฟฉาย แบตเตอรี่สำรอง (Powerbank)</span>
-              </li>
             </ul>
           </div>
 
@@ -216,10 +293,6 @@
                 <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
                 <span>ติดตามประกาศเตือนภัยจากทางอำเภออย่างใกล้ชิด</span>
               </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
-                <span>สำรวจจุดอพยพและเส้นทางปลอดภัยล่วงหน้า</span>
-              </li>
             </ul>
           </div>
         </div>
@@ -228,7 +301,7 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE WITH MODERN MAP PIN) -->
+    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE WITH 4 WATER LEVELS + PHOTO UPLOAD) -->
     <!-- ================================================================= -->
     <div id="page-add" class="hidden max-w-xl mx-auto bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -245,38 +318,59 @@
       <p class="text-[11px] text-slate-400 font-medium">พิกัดที่เลือก: <span id="selected-coords" class="font-mono text-slate-600">ยังไม่ได้คลิกเลือก</span></p>
 
       <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-5">
+        
+        <!-- ระดับน้ำ 4 ระดับ -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-2.5">
-            แนวโน้มระดับน้ำในขณะนี้ <span class="text-rose-500 font-semibold">* (เลือกได้ 1 ตัวเลือก)</span>
+            ระดับน้ำในพื้นที่ <span class="text-rose-500 font-semibold">* (เลือก 1 ระดับ)</span>
           </label>
-          <div class="grid grid-cols-3 gap-3">
-            <label class="relative flex flex-col items-center p-3.5 rounded-2xl border border-slate-200/80 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition-all text-center group">
-              <input type="radio" name="water-trend" value="decreasing" checked class="peer hidden">
-              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white flex items-center justify-center transition-all mb-1.5">
-                <i data-lucide="trending-down" class="w-4 h-4"></i>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            
+            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/20 transition-all text-center">
+              <input type="radio" name="water-level" value="1" checked onchange="togglePhotoUpload(1)" class="peer hidden">
+              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
+                <i data-lucide="droplet-off" class="w-3.5 h-3.5"></i>
               </div>
-              <span class="font-bold text-xs text-slate-700 peer-checked:text-emerald-700">น้ำลดลง</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">ระดับน้ำทรงตัว/แห้ง</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-emerald-700">1. ปกติ / แห้ง</span>
+              <span class="text-[9px] text-slate-400">ไม่มีน้ำท่วม</span>
             </label>
 
-            <label class="relative flex flex-col items-center p-3.5 rounded-2xl border border-slate-200/80 cursor-pointer hover:border-sky-500 hover:bg-sky-50/30 transition-all text-center group">
-              <input type="radio" name="water-trend" value="stable" class="peer hidden">
-              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-sky-500 peer-checked:text-white flex items-center justify-center transition-all mb-1.5">
-                <i data-lucide="minus" class="w-4 h-4"></i>
+            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-sky-500 hover:bg-sky-50/20 transition-all text-center">
+              <input type="radio" name="water-level" value="2" onchange="togglePhotoUpload(2)" class="peer hidden">
+              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-sky-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
+                <i data-lucide="waves" class="w-3.5 h-3.5"></i>
               </div>
-              <span class="font-bold text-xs text-slate-700 peer-checked:text-sky-700">น้ำคงที่</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">ไม่เพิ่มไม่ลด</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-sky-700">2. เฝ้าระวัง</span>
+              <span class="text-[9px] text-slate-400">ระดับริมตลิ่ง</span>
             </label>
 
-            <label class="relative flex flex-col items-center p-3.5 rounded-2xl border border-slate-200/80 cursor-pointer hover:border-rose-500 hover:bg-rose-50/30 transition-all text-center group">
-              <input type="radio" name="water-trend" value="increasing" class="peer hidden">
-              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-rose-500 peer-checked:text-white flex items-center justify-center transition-all mb-1.5">
-                <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-amber-500 hover:bg-amber-50/20 transition-all text-center">
+              <input type="radio" name="water-level" value="3" onchange="togglePhotoUpload(3)" class="peer hidden">
+              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-amber-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
               </div>
-              <span class="font-bold text-xs text-slate-700 peer-checked:text-rose-700">น้ำเพิ่มขึ้น</span>
-              <span class="text-[10px] text-slate-400 mt-0.5">เริ่มเอ่อล้น/เพิ่มสูง</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-amber-700">3. ท่วมขังสูง</span>
+              <span class="text-[9px] text-rose-500 font-medium">* ต้องแนบรูป</span>
             </label>
+
+            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-rose-500 hover:bg-rose-50/20 transition-all text-center">
+              <input type="radio" name="water-level" value="4" onchange="togglePhotoUpload(4)" class="peer hidden">
+              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-rose-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
+                <i data-lucide="siren" class="w-3.5 h-3.5"></i>
+              </div>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-rose-700">4. วิกฤต/ล้น</span>
+              <span class="text-[9px] text-rose-500 font-medium">* ต้องแนบรูป</span>
+            </label>
+
           </div>
+        </div>
+
+        <div id="photo-upload-section" class="hidden bg-slate-50/80 p-4 rounded-2xl border border-amber-200 space-y-2">
+          <div class="flex items-center gap-2 text-amber-700 font-bold text-xs">
+            <i data-lucide="camera" class="w-4 h-4 text-amber-600"></i>
+            <span>ถ่ายรูป/แนบรูปสถานที่จริง (จำเป็นสำหรับระดับ 3 และ 4)</span>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
         </div>
 
         <div>
@@ -299,15 +393,12 @@
 
   </div>
 
-  <!-- JavaScript logic สำหรับเปลี่ยนข้อมูลทุก 1 ชั่วโมง และรองรับทั้ง 10 อำเภอ -->
   <script>
-    // รายชื่อทั้ง 10 อำเภอในจังหวัดราชบุรี
     const ratchaburiDistricts = [
       "อ.เมืองราชบุรี", "อ.บ้านโป่ง", "อ.โพธาราม", "อ.ดำเนินสะดวก", "อ.ปากท่อ",
       "อ.จอมบึง", "อ.สวนผึ้ง", "อ.บางแพ", "อ.วัดเพลง", "อ.บ้านคา"
     ];
 
-    // รายการสภาพอากาศสุ่มจำลองตามชั่วโมง
     const weatherPresets = [
       { temp: "31°C", desc: "ท้องฟ้าแจ่มใส มีแดดจัดและลมพัดเบาๆ", icon: "sun" },
       { temp: "33°C", desc: "ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่", icon: "cloud-rain" },
@@ -318,7 +409,7 @@
 
     let map = null;
     let tempMarker = null;
-    let secondsLeft = 3600; // 1 ชั่วโมง = 3600 วินาที
+    let secondsLeft = 3600;
 
     window.onload = function() {
       updateHourlyData();
@@ -326,24 +417,21 @@
       lucide.createIcons();
     };
 
-    // ฟังก์ชันอัปเดตข้อมูลจำลองทุก 1 ชั่วโมง
     function updateHourlyData() {
       const now = new Date();
       const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       document.getElementById('last-updated-time').innerText = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH', options)} น.`;
 
-      // 1. สุ่มสภาพอากาศ
       const randomWeather = weatherPresets[Math.floor(Math.random() * weatherPresets.length)];
       document.getElementById('weather-temp').innerText = randomWeather.temp;
       document.getElementById('weather-desc').innerText = randomWeather.desc;
       document.getElementById('weather-icon-box').innerHTML = `<i data-lucide="${randomWeather.icon}" class="w-9 h-9 text-white"></i>`;
 
-      // 2. สุ่มข้อมูลโอกาสอุทกภัย 10 อำเภอ
       const floodContainer = document.getElementById('flood-list-container');
       floodContainer.innerHTML = '';
       
       ratchaburiDistricts.forEach((district, index) => {
-        const percent = Math.floor(Math.random() * 65) + 15; // สุ่มระหว่าง 15% - 80%
+        const percent = Math.floor(Math.random() * 65) + 15;
         const isHigh = percent >= 55;
         const colorClass = isHigh ? 'text-rose-500' : 'text-amber-600';
         const bgBarClass = isHigh ? 'bg-rose-500' : 'bg-amber-500';
@@ -362,12 +450,11 @@
         floodContainer.innerHTML += itemHTML;
       });
 
-      // 3. สุ่มข้อมูล PM2.5 ทั้ง 10 อำเภอ
       const pm25Container = document.getElementById('pm25-list-container');
       pm25Container.innerHTML = '';
 
       ratchaburiDistricts.forEach((district, index) => {
-        const pmValue = Math.floor(Math.random() * 45) + 10; // สุ่มระหว่าง 10 - 55 µg/m³
+        const pmValue = Math.floor(Math.random() * 45) + 10;
         let statusBadge = '';
 
         if (pmValue <= 20) {
@@ -390,7 +477,6 @@
       lucide.createIcons();
     }
 
-    // ตัวนับเวลาถอยหลัง 1 ชั่วโมงเพื่ออัปเดตอัตโนมัติ
     function startHourlyTimer() {
       setInterval(() => {
         secondsLeft--;
@@ -402,6 +488,19 @@
         const secs = secondsLeft % 60;
         document.getElementById('next-update-timer').innerText = `รีเฟรชใน: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
       }, 1000);
+    }
+
+    function togglePhotoUpload(level) {
+      const uploadSection = document.getElementById('photo-upload-section');
+      const photoInput = document.getElementById('photo-input');
+
+      if (level === 3 || level === 4) {
+        uploadSection.classList.remove('hidden');
+        photoInput.required = true;
+      } else {
+        uploadSection.classList.add('hidden');
+        photoInput.required = false;
+      }
     }
 
     function switchPage(page) {
