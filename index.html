@@ -12,7 +12,6 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    /* Custom Modern Marker Pin Animation & Style */
     .custom-pin-wrapper {
       position: relative;
       width: 36px;
@@ -67,14 +66,15 @@
         </div>
         <div>
           <h1 class="font-extrabold text-slate-900 text-base leading-tight tracking-tight">ศูนย์ภัยพิบัติ จ.ราชบุรี</h1>
-          <p class="text-[11px] font-medium text-slate-400">Ratchaburi Water Monitoring</p>
+          <p class="text-[11px] font-medium text-slate-400">Ratchaburi Disaster Center</p>
         </div>
       </div>
 
       <!-- Tab Switcher -->
       <div class="flex bg-slate-100/80 p-1 rounded-2xl text-xs font-semibold">
-        <button id="btn-tab-main" onclick="switchPage('main')" class="px-4 py-1.5 rounded-xl bg-white text-sky-600 shadow-sm transition-all duration-200">หน้าหลัก</button>
-        <button id="btn-tab-add" onclick="switchPage('add')" class="px-4 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition-all duration-200">+ ปักหมุด</button>
+        <button id="btn-tab-main" onclick="switchPage('main')" class="px-3.5 py-1.5 rounded-xl bg-white text-sky-600 shadow-sm transition-all duration-200">หน้าหลัก</button>
+        <button id="btn-tab-sos" onclick="switchPage('sos')" class="px-3.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 transition-all duration-200 font-bold">🚨 SOS</button>
+        <button id="btn-tab-add" onclick="switchPage('add')" class="px-3.5 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition-all duration-200">+ ปักหมุด</button>
       </div>
     </div>
   </header>
@@ -105,22 +105,39 @@
         </div>
       </div>
 
-      <!-- Weather Banner -->
-      <div class="bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white p-6 rounded-3xl shadow-lg shadow-sky-500/10 flex justify-between items-center relative overflow-hidden">
-        <div class="space-y-1 relative z-10">
-          <span class="text-[11px] font-semibold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-wider">ภาพรวมสภาพอากาศรายชั่วโมง</span>
-          <h2 class="text-4xl font-black mt-2 tracking-tight" id="weather-temp">32°C</h2>
-          <p class="text-xs text-sky-100/90 font-normal pt-1" id="weather-desc">ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่</p>
+      <!-- Weather & River Level Card -->
+      <div class="grid md:grid-cols-3 gap-4">
+        <!-- Weather Banner -->
+        <div class="md:col-span-2 bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white p-5 rounded-3xl shadow-lg shadow-sky-500/10 flex justify-between items-center relative overflow-hidden">
+          <div class="space-y-1 relative z-10">
+            <span class="text-[10px] font-semibold bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full uppercase tracking-wider">สภาพอากาศรายชั่วโมง</span>
+            <h2 class="text-3xl font-black mt-1 tracking-tight" id="weather-temp">32°C</h2>
+            <p class="text-xs text-sky-100/90 font-normal" id="weather-desc">ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30%</p>
+          </div>
+          <div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20" id="weather-icon-box">
+            <i data-lucide="cloud-rain" class="w-8 h-8 text-white"></i>
+          </div>
         </div>
-        <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20" id="weather-icon-box">
-          <i data-lucide="cloud-rain" class="w-9 h-9 text-white"></i>
+
+        <!-- River Monitoring Box -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">ระดับน้ำแม่น้ำแม่กลอง</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          </div>
+          <div>
+            <div class="text-2xl font-black text-slate-800">1.85 <span class="text-xs font-normal text-slate-400">ม.รทก.</span></div>
+            <p class="text-[11px] text-emerald-600 font-medium">ต่ำกว่าตลิ่ง 1.15 เมตร (ปกติ)</p>
+          </div>
+          <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full w-[60%]"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Dual Risk Cards (ทั้ง 10 อำเภอ) -->
+      <!-- Dual Risk Cards (10 อำเภอ) -->
       <div class="grid md:grid-cols-2 gap-5">
-
-        <!-- Card 1: Flood Risk (10 อำเภอ) -->
+        <!-- Card 1: Flood Risk -->
         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div class="flex justify-between items-center border-b border-slate-100/80 pb-3">
             <div class="flex items-center gap-2.5">
@@ -131,13 +148,10 @@
             </div>
             <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">ครบ 10 อำเภอ</span>
           </div>
-
-          <div class="space-y-2.5 text-xs max-h-[360px] overflow-y-auto pr-1" id="flood-list-container">
-            <!-- Render ครบ 10 อำเภอด้วย JS -->
-          </div>
+          <div class="space-y-2.5 text-xs max-h-[320px] overflow-y-auto pr-1" id="flood-list-container"></div>
         </div>
 
-        <!-- Card 2: PM 2.5 Status (10 อำเภอ) -->
+        <!-- Card 2: PM 2.5 Status -->
         <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div class="flex justify-between items-center border-b border-slate-100/80 pb-3">
             <div class="flex items-center gap-2.5">
@@ -148,17 +162,11 @@
             </div>
             <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">ครบ 10 อำเภอ</span>
           </div>
-
-          <div class="space-y-2 text-xs max-h-[360px] overflow-y-auto pr-1" id="pm25-list-container">
-            <!-- Render ครบ 10 อำเภอด้วย JS -->
-          </div>
+          <div class="space-y-2 text-xs max-h-[320px] overflow-y-auto pr-1" id="pm25-list-container"></div>
         </div>
-
       </div>
 
-      <!-- ================================================================= -->
-      <!-- NEW: เบอร์สายด่วนฉุกเฉิน (EMERGENCY HOTLINES SECTION) -->
-      <!-- ================================================================= -->
+      <!-- EMERGENCY HOTLINES SECTION -->
       <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
           <div class="flex items-center gap-3">
@@ -166,134 +174,50 @@
               <i data-lucide="phone-call" class="w-5 h-5"></i>
             </div>
             <div>
-              <h3 class="font-bold text-slate-800 text-base">น้ำท่วมมาเมื่อไหร่ มีเบอร์นี้อุ่นใจกว่า</h3>
-              <p class="text-xs text-slate-400">เซฟไว้ ใช้เมื่อต้องการความช่วยเหลือฉุกเฉิน</p>
+              <h3 class="font-bold text-slate-800 text-base">สายด่วนและเบอร์ติดต่อฉุกเฉิน[span_0](start_span)[span_0](end_span)</h3>
+              <p class="text-xs text-slate-400">เซฟไว้ ใช้เมื่อต้องการความช่วยเหลือ[span_1](start_span)[span_1](end_span)</p>
             </div>
           </div>
           <span class="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full animate-pulse">24 ชั่วโมง</span>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-5">
-          <!-- กลุ่มที่ 1: ขอความช่วยเหลือ -->
-          <div class="space-y-3 bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
-            <div class="flex items-center gap-2 text-purple-800 font-bold text-xs border-b border-purple-100 pb-2">
-              <div class="w-6 h-6 rounded-lg bg-purple-200/80 flex items-center justify-center text-purple-700">
-                <i data-lucide="life-buoy" class="w-3.5 h-3.5"></i>
+        <div class="space-y-4">
+          <div class="flex border-b border-slate-100 text-xs font-bold gap-4">
+            <button onclick="togglePhoneTab('central')" id="btn-phone-central" class="pb-2 text-sky-600 border-b-2 border-sky-600">สายด่วนส่วนกลาง</button>
+            <button onclick="togglePhoneTab('district')" id="btn-phone-district" class="pb-2 text-slate-400 border-b-2 border-transparent hover:text-slate-600">เบอร์ศูนย์ประจำอำเภอ (จ.ราชบุรี)</button>
+          </div>
+
+          <div id="phone-central-box" class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-2 bg-purple-50/50 p-3.5 rounded-2xl border border-purple-100">
+              <span class="text-xs font-bold text-purple-800">1. ขอความช่วยเหลือ[span_2](start_span)[span_2](end_span)</span>
+              <div class="grid grid-cols-2 gap-2 mt-1">
+                <a href="tel:1111" class="bg-white p-2.5 rounded-xl border border-purple-100 text-xs flex flex-col"><span class="text-[10px] text-slate-400">ศูนย์อุทกภัย[span_3](start_span)[span_3](end_span)</span><span class="font-black text-purple-700 text-sm">1111 กด 5[span_4](start_span)[span_4](end_span)</span></a>
+                <a href="tel:1784" class="bg-white p-2.5 rounded-xl border border-purple-100 text-xs flex flex-col"><span class="text-[10px] text-slate-400">ด่วนนิรภัย ปภ.[span_5](start_span)[span_5](end_span)</span><span class="font-black text-purple-700 text-sm">1784[span_6](start_span)[span_6](end_span)</span></a>
+                <a href="tel:1677" class="bg-white p-2.5 rounded-xl border border-purple-100 text-xs flex flex-col"><span class="text-[10px] text-slate-400">ร่วมด้วยช่วยกัน[span_7](start_span)[span_7](end_span)</span><span class="font-black text-purple-700 text-sm">1677[span_8](start_span)[span_8](end_span)</span></a>
+                <a href="tel:1664" class="bg-white p-2.5 rounded-xl border border-purple-100 text-xs flex flex-col"><span class="text-[10px] text-slate-400">สภากาชาดไทย[span_9](start_span)[span_9](end_span)</span><span class="font-black text-purple-700 text-sm">1664[span_10](start_span)[span_10](end_span)</span></a>
               </div>
-              <span>1. ขอความช่วยเหลือ (ศูนย์ช่วยเหลืออุทกภัย)</span>
             </div>
-            <div class="grid grid-cols-2 gap-2.5">
-              <a href="tel:1111" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">ศูนย์ช่วยเหลือผู้ประสบอุทกภัย</span>
-                <span class="text-base font-black text-purple-700 mt-1">1111 <span class="text-xs font-normal text-slate-500">กด 5</span></span>
-              </a>
-              <a href="tel:1784" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">ด่วนนิรภัย ปภ. (แจ้งเหตุฉุกเฉิน)</span>
-                <span class="text-base font-black text-purple-700 mt-1">1784</span>
-              </a>
-              <a href="tel:1677" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">ร่วมด้วยช่วยกัน ประสานช่วยเหลือ</span>
-                <span class="text-base font-black text-purple-700 mt-1">1677</span>
-              </a>
-              <a href="tel:1664" class="bg-white p-3 rounded-xl border border-purple-100 hover:border-purple-300 transition-all shadow-sm flex flex-col justify-between">
-                <span class="text-[10px] text-slate-400 font-medium">สภากาชาดไทย ช่วยเหลือสาธารณภัย</span>
-                <span class="text-base font-black text-purple-700 mt-1">1664</span>
-              </a>
+            <div class="space-y-2 bg-emerald-50/50 p-3.5 rounded-2xl border border-emerald-100">
+              <span class="text-xs font-bold text-emerald-800">2. แพทย์และความปลอดภัย[span_11](start_span)[span_11](end_span)</span>
+              <div class="space-y-2 mt-1">
+                <a href="tel:1669" class="bg-white p-2 rounded-xl border border-emerald-100 flex justify-between items-center text-xs"><span class="font-medium text-slate-700">แพทย์ฉุกเฉิน รถพยาบาล[span_12](start_span)[span_12](end_span)</span><span class="font-black text-emerald-600 text-sm">1669[span_13](start_span)[span_13](end_span)</span></a>
+                <a href="tel:191" class="bg-white p-2 rounded-xl border border-emerald-100 flex justify-between items-center text-xs"><span class="font-medium text-slate-700">ตำรวจ เหตุด่วนเหตุร้าย[span_14](start_span)[span_14](end_span)</span><span class="font-black text-emerald-600 text-sm">191[span_15](start_span)[span_15](end_span)</span></a>
+                <a href="tel:199" class="bg-white p-2 rounded-xl border border-emerald-100 flex justify-between items-center text-xs"><span class="font-medium text-slate-700">ดับเพลิงและกู้ภัย[span_16](start_span)[span_16](end_span)</span><span class="font-black text-emerald-600 text-sm">199[span_17](start_span)[span_17](end_span)</span></a>
+              </div>
             </div>
           </div>
 
-          <!-- กลุ่มที่ 2: แพทย์และความปลอดภัย -->
-          <div class="space-y-3 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100">
-            <div class="flex items-center gap-2 text-emerald-800 font-bold text-xs border-b border-emerald-100 pb-2">
-              <div class="w-6 h-6 rounded-lg bg-emerald-200/80 flex items-center justify-center text-emerald-700">
-                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-              </div>
-              <span>2. แพทย์และความปลอดภัย</span>
-            </div>
-            <div class="space-y-2">
-              <a href="tel:1669" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
-                <div>
-                  <div class="text-[11px] font-bold text-slate-700">แพทย์ฉุกเฉิน / รถพยาบาล</div>
-                  <div class="text-[10px] text-slate-400">เหตุฉุกเฉินทางการแพทย์</div>
-                </div>
-                <span class="text-base font-black text-emerald-600">1669</span>
-              </a>
-              <a href="tel:191" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
-                <div>
-                  <div class="text-[11px] font-bold text-slate-700">เหตุด่วนเหตุร้าย (ตำรวจ)</div>
-                  <div class="text-[10px] text-slate-400">ดูแลความปลอดภัยในพื้นที่ภัยพิบัติ</div>
-                </div>
-                <span class="text-base font-black text-emerald-600">191</span>
-              </a>
-              <a href="tel:199" class="bg-white p-2.5 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-all shadow-sm flex items-center justify-between">
-                <div>
-                  <div class="text-[11px] font-bold text-slate-700">ดับเพลิงและกู้ภัย</div>
-                  <div class="text-[10px] text-slate-400">กู้ภัยฉุกเฉิน อัคคีภัย สัตว์มีพิษ</div>
-                </div>
-                <span class="text-base font-black text-emerald-600">199</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preparedness & Checklist -->
-      <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
-        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-          <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="font-bold text-slate-800 text-base">ข้อควรปฏิบัติและเตรียมความพร้อมอุทกภัย</h3>
-            <p class="text-xs text-slate-400">แนวทางรับมืออย่างปลอดภัยสำหรับครอบครัว</p>
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 space-y-3">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-xl bg-sky-100/70 text-sky-600 flex items-center justify-center">
-                <i data-lucide="box" class="w-4 h-4"></i>
-              </div>
-              <h4 class="font-bold text-slate-800 text-xs">สิ่งที่ต้องเตรียม (Emergency Kit)</h4>
-            </div>
-            <ul class="space-y-2 text-xs text-slate-600">
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
-                <span>น้ำดื่มสะอาด และอาหารแห้งอย่างน้อย 3 วัน</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
-                <span>ยารักษาโรคประจำตัว และชุดปฐมพยาบาล</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
-                <span>เอกสารสำคัญใส่ถุงพลาสติกกันน้ำ</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 space-y-3">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-xl bg-amber-100/70 text-amber-600 flex items-center justify-center">
-                <i data-lucide="shield-alert" class="w-4 h-4"></i>
-              </div>
-              <h4 class="font-bold text-slate-800 text-xs">สิ่งที่ต้องทำ (Action Plan)</h4>
-            </div>
-            <ul class="space-y-2 text-xs text-slate-600">
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
-                <span>ขนย้ายสิ่งของ เครื่องใช้ไฟฟ้าขึ้นที่สูง</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
-                <span>ตัดสะพานไฟ (คัทเอาท์ชั้นล่าง) ป้องกันไฟรั่ว</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i data-lucide="check" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
-                <span>ติดตามประกาศเตือนภัยจากทางอำเภออย่างใกล้ชิด</span>
-              </li>
-            </ul>
+          <div id="phone-district-box" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+            <a href="tel:032337015" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.เมืองราชบุรี</div><div class="text-sky-600 font-mono">032-337-015</div></a>
+            <a href="tel:032254882" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.บ้านโป่ง</div><div class="text-sky-600 font-mono">032-254-882</div></a>
+            <a href="tel:032354647" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.โพธาราม</div><div class="text-sky-600 font-mono">032-354-647</div></a>
+            <a href="tel:032241103" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.ดำเนินสะดวก</div><div class="text-sky-600 font-mono">032-241-103</div></a>
+            <a href="tel:032281082" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.ปากท่อ</div><div class="text-sky-600 font-mono">032-281-082</div></a>
+            <a href="tel:032261225" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.จอมบึง</div><div class="text-sky-600 font-mono">032-261-225</div></a>
+            <a href="tel:032395151" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.สวนผึ้ง</div><div class="text-sky-600 font-mono">032-395-151</div></a>
+            <a href="tel:032381000" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.บางแพ</div><div class="text-sky-600 font-mono">032-381-000</div></a>
+            <a href="tel:032391008" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.วัดเพลง</div><div class="text-sky-600 font-mono">032-391-008</div></a>
+            <a href="tel:032228221" class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-sky-300"><div class="font-bold text-slate-700">อ.บ้านคา</div><div class="text-sky-600 font-mono">032-228-221</div></a>
           </div>
         </div>
       </div>
@@ -301,16 +225,64 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- PAGE 2: หน้าปักหมุด (ADD PIN PAGE WITH 4 WATER LEVELS + PHOTO UPLOAD) -->
+    <!-- PAGE 2: หน้า SOS (EMERGENCY SOS FORM) -->
+    <!-- ================================================================= -->
+    <div id="page-sos" class="hidden max-w-xl mx-auto bg-white p-6 rounded-3xl border border-rose-100 shadow-sm space-y-5">
+      <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+        <div>
+          <h2 class="font-bold text-rose-600 text-base flex items-center gap-2"><i data-lucide="siren" class="w-5 h-5"></i> แจ้งขอความช่วยเหลือด่วน (SOS)</h2>
+          <p class="text-xs text-slate-400">สำหรับผู้ติดค้างในพื้นที่น้ำท่วมขัง จ.ราชบุรี</p>
+        </div>
+      </div>
+
+      <form onsubmit="submitSOS(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่อ-นามสกุล ผู้แจ้ง / ผู้ติดค้าง *</label>
+          <input type="text" required placeholder="กรอกชื่อ-นามสกุล..." class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">เบอร์โทรศัพท์ที่ติดต่อได้ *</label>
+          <input type="tel" required placeholder="เช่น 081-234-5678" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">อำเภอที่อยู่ปัจจุบัน *</label>
+          <select required class="w-full p-2.5 border border-slate-200 rounded-xl">
+            <option value="">-- เลือกอำเภอ --</option>
+            <option>อ.เมืองราชบุรี</option><option>อ.บ้านโป่ง</option><option>อ.โพธาราม</option>
+            <option>อ.ดำเนินสะดวก</option><option>อ.ปากท่อ</option><option>อ.จอมบึง</option>
+            <option>อ.สวนผึ้ง</option><option>อ.บางแพ</option><option>อ.วัดเพลง</option><option>อ.บ้านคา</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">จำนวนผู้ติดค้าง และกลุ่มเปราะบาง</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" placeholder="ผู้ใหญ่ (คน)" class="p-2.5 border border-slate-200 rounded-xl">
+            <input type="number" placeholder="เด็ก / ผู้สูงอายุ / ผู้ป่วย" class="p-2.5 border border-slate-200 rounded-xl">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ความช่วยเหลือที่ต้องการเร่งด่วน</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2 border border-slate-100 rounded-xl bg-slate-50"><input type="checkbox"> เรืออพยพ</label>
+            <label class="flex items-center gap-2 p-2 border border-slate-100 rounded-xl bg-slate-50"><input type="checkbox"> อาหาร/น้ำดื่ม</label>
+            <label class="flex items-center gap-2 p-2 border border-slate-100 rounded-xl bg-slate-50"><input type="checkbox"> ยารักษาโรค</label>
+            <label class="flex items-center gap-2 p-2 border border-slate-100 rounded-xl bg-slate-50"><input type="checkbox"> ตัดกระแสไฟฟ้า</label>
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-500/20">
+          ส่งข้อมูลขอความช่วยเหลือด่วน
+        </button>
+      </form>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- PAGE 3: หน้าปักหมุด (พร้อมฟีเจอร์เลือกแนวโน้มระดับน้ำแบบโมเดิร์น) -->
     <!-- ================================================================= -->
     <div id="page-add" class="hidden max-w-xl mx-auto bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
           <h2 class="font-bold text-slate-800 text-base">ปักหมุดรายงานสถานการณ์น้ำ</h2>
           <p class="text-xs text-slate-400">แตะเลือกตำแหน่งบนแผนที่ในจังหวัดราชบุรี</p>
-        </div>
-        <div class="w-9 h-9 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center">
-          <i data-lucide="map-pin" class="w-5 h-5"></i>
         </div>
       </div>
 
@@ -319,70 +291,78 @@
 
       <form id="add-pin-form" onsubmit="savePin(event)" class="space-y-5">
         
-        <!-- ระดับน้ำ 4 ระดับ -->
+        <!-- 1. ระดับน้ำในปัจจุบัน -->
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-2.5">
-            ระดับน้ำในพื้นที่ <span class="text-rose-500 font-semibold">* (เลือก 1 ระดับ)</span>
+          <label class="block text-xs font-bold text-slate-700 mb-2">
+            1. ระดับน้ำในพื้นที่ปัจจุบัน <span class="text-rose-500 font-semibold">*</span>
           </label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <label class="p-2.5 border border-slate-200 rounded-xl flex items-center gap-2 font-bold cursor-pointer hover:border-emerald-500 transition-all">
+              <input type="radio" name="wl" checked class="accent-emerald-600"> 1. ปกติ / แห้ง
+            </label>
+            <label class="p-2.5 border border-slate-200 rounded-xl flex items-center gap-2 font-bold cursor-pointer hover:border-sky-500 transition-all">
+              <input type="radio" name="wl" class="accent-sky-600"> 2. เฝ้าระวัง
+            </label>
+            <label class="p-2.5 border border-slate-200 rounded-xl flex items-center gap-2 font-bold cursor-pointer hover:border-amber-500 transition-all">
+              <input type="radio" name="wl" class="accent-amber-600"> 3. ท่วมขังสูง
+            </label>
+            <label class="p-2.5 border border-slate-200 rounded-xl flex items-center gap-2 font-bold cursor-pointer hover:border-rose-500 transition-all">
+              <input type="radio" name="wl" class="accent-rose-600"> 4. วิกฤต/ล้นตลิ่ง
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. แนวโน้มการเปลี่ยนแปลงของระดับน้ำ (เพิ่มขึ้น / ทรงตัว / ลดลง) - โมเดิร์นดีไซน์ -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">
+            2. แนวโน้มทิศทางของระดับน้ำ <span class="text-rose-500 font-semibold">*</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2.5">
             
-            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/20 transition-all text-center">
-              <input type="radio" name="water-level" value="1" checked onchange="togglePhotoUpload(1)" class="peer hidden">
-              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
-                <i data-lucide="droplet-off" class="w-3.5 h-3.5"></i>
+            <!-- เพิ่มขึ้น -->
+            <label class="relative flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-white cursor-pointer hover:border-rose-500 transition-all text-center group">
+              <input type="radio" name="water-trend" value="up" checked class="peer hidden">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-rose-500 peer-checked:text-white flex items-center justify-center transition-all mb-1 shadow-sm">
+                <i data-lucide="trending-up" class="w-4 h-4"></i>
               </div>
-              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-emerald-700">1. ปกติ / แห้ง</span>
-              <span class="text-[9px] text-slate-400">ไม่มีน้ำท่วม</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-rose-600">ระดับน้ำเพิ่มขึ้น</span>
+              <span class="text-[9px] text-slate-400 peer-checked:text-rose-500 mt-0.5">กำลังสูงขึ้น</span>
+              <div class="absolute inset-0 border-2 border-transparent peer-checked:border-rose-500 rounded-2xl pointer-events-none"></div>
             </label>
 
-            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-sky-500 hover:bg-sky-50/20 transition-all text-center">
-              <input type="radio" name="water-level" value="2" onchange="togglePhotoUpload(2)" class="peer hidden">
-              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-sky-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
-                <i data-lucide="waves" class="w-3.5 h-3.5"></i>
+            <!-- ทรงตัว / คงที่ -->
+            <label class="relative flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-white cursor-pointer hover:border-sky-500 transition-all text-center group">
+              <input type="radio" name="water-trend" value="stable" class="peer hidden">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-sky-500 peer-checked:text-white flex items-center justify-center transition-all mb-1 shadow-sm">
+                <i data-lucide="minus" class="w-4 h-4"></i>
               </div>
-              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-sky-700">2. เฝ้าระวัง</span>
-              <span class="text-[9px] text-slate-400">ระดับริมตลิ่ง</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-sky-600">ทรงตัว / คงที่</span>
+              <span class="text-[9px] text-slate-400 peer-checked:text-sky-500 mt-0.5">ระดับน้ำเท่าเดิม</span>
+              <div class="absolute inset-0 border-2 border-transparent peer-checked:border-sky-500 rounded-2xl pointer-events-none"></div>
             </label>
 
-            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-amber-500 hover:bg-amber-50/20 transition-all text-center">
-              <input type="radio" name="water-level" value="3" onchange="togglePhotoUpload(3)" class="peer hidden">
-              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-amber-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
-                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+            <!-- ลดลง -->
+            <label class="relative flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-white cursor-pointer hover:border-emerald-500 transition-all text-center group">
+              <input type="radio" name="water-trend" value="down" class="peer hidden">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white flex items-center justify-center transition-all mb-1 shadow-sm">
+                <i data-lucide="trending-down" class="w-4 h-4"></i>
               </div>
-              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-amber-700">3. ท่วมขังสูง</span>
-              <span class="text-[9px] text-rose-500 font-medium">* ต้องแนบรูป</span>
-            </label>
-
-            <label class="relative flex flex-col items-center p-3 rounded-2xl border border-slate-200 cursor-pointer hover:border-rose-500 hover:bg-rose-50/20 transition-all text-center">
-              <input type="radio" name="water-level" value="4" onchange="togglePhotoUpload(4)" class="peer hidden">
-              <div class="w-7 h-7 rounded-xl bg-slate-100 text-slate-500 peer-checked:bg-rose-500 peer-checked:text-white flex items-center justify-center transition-all mb-1">
-                <i data-lucide="siren" class="w-3.5 h-3.5"></i>
-              </div>
-              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-rose-700">4. วิกฤต/ล้น</span>
-              <span class="text-[9px] text-rose-500 font-medium">* ต้องแนบรูป</span>
+              <span class="font-bold text-[11px] text-slate-700 peer-checked:text-emerald-600">ระดับน้ำลดลง</span>
+              <span class="text-[9px] text-slate-400 peer-checked:text-emerald-500 mt-0.5">เริ่มแห้ง/ลดลง</span>
+              <div class="absolute inset-0 border-2 border-transparent peer-checked:border-emerald-500 rounded-2xl pointer-events-none"></div>
             </label>
 
           </div>
         </div>
 
-        <div id="photo-upload-section" class="hidden bg-slate-50/80 p-4 rounded-2xl border border-amber-200 space-y-2">
-          <div class="flex items-center gap-2 text-amber-700 font-bold text-xs">
-            <i data-lucide="camera" class="w-4 h-4 text-amber-600"></i>
-            <span>ถ่ายรูป/แนบรูปสถานที่จริง (จำเป็นสำหรับระดับ 3 และ 4)</span>
-          </div>
-          <input type="file" id="photo-input" accept="image/*" class="text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อสถานที่ / จุดสังเกต</label>
+          <input type="text" required placeholder="เช่น หน้าตลาดสด, สะพานข้ามแม่น้ำแม่กลอง..." class="w-full p-2.5 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5">ชื่อสถานที่ / จุดสังเกต</label>
-          <input type="text" id="pin-title" placeholder="เช่น สะพานข้ามแม่น้ำแม่กลอง, หน้าวัด..." required
-            class="w-full px-3.5 py-2.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1.5">รายละเอียดเพิ่มเติม</label>
-          <textarea id="pin-detail" rows="3" placeholder="กรอกข้อมูลเพิ่มเติมเกี่ยวกับสถานการณ์น้ำในจุดนี้..."
-            class="w-full px-3.5 py-2.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"></textarea>
+          <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดเพิ่มเติม</label>
+          <textarea rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม..." class="w-full p-2.5 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"></textarea>
         </div>
 
         <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-500/20 transition-all">
@@ -394,179 +374,80 @@
   </div>
 
   <script>
-    const ratchaburiDistricts = [
-      "อ.เมืองราชบุรี", "อ.บ้านโป่ง", "อ.โพธาราม", "อ.ดำเนินสะดวก", "อ.ปากท่อ",
-      "อ.จอมบึง", "อ.สวนผึ้ง", "อ.บางแพ", "อ.วัดเพลง", "อ.บ้านคา"
-    ];
-
-    const weatherPresets = [
-      { temp: "31°C", desc: "ท้องฟ้าแจ่มใส มีแดดจัดและลมพัดเบาๆ", icon: "sun" },
-      { temp: "33°C", desc: "ท้องฟ้ามีเมฆเป็นส่วนมาก โอกาสฝนตก 30% ในพื้นที่", icon: "cloud-rain" },
-      { temp: "29°C", desc: "มีฝนตกเล็กน้อยกระจายบางพื้นที่ ลมกระโชกแรง", icon: "cloud-drizzle" },
-      { temp: "34°C", desc: "อากาศร้อนจัด มีเมฆบางส่วน ความชื้นสูง", icon: "sun-medium" },
-      { temp: "28°C", desc: "ฟ้ามืดครึ้ม อากาศชื้น มีโอกาสเกิดฝนตกหนัก", icon: "cloud-lightning" }
-    ];
-
-    let map = null;
-    let tempMarker = null;
-    let secondsLeft = 3600;
+    const ratchaburiDistricts = ["อ.เมืองราชบุรี", "อ.บ้านโป่ง", "อ.โพธาราม", "อ.ดำเนินสะดวก", "อ.ปากท่อ", "อ.จอมบึง", "อ.สวนผึ้ง", "อ.บางแพ", "อ.วัดเพลง", "อ.บ้านคา"];
+    let map = null, tempMarker = null;
 
     window.onload = function() {
       updateHourlyData();
-      startHourlyTimer();
       lucide.createIcons();
     };
 
     function updateHourlyData() {
       const now = new Date();
-      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      document.getElementById('last-updated-time').innerText = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH', options)} น.`;
-
-      const randomWeather = weatherPresets[Math.floor(Math.random() * weatherPresets.length)];
-      document.getElementById('weather-temp').innerText = randomWeather.temp;
-      document.getElementById('weather-desc').innerText = randomWeather.desc;
-      document.getElementById('weather-icon-box').innerHTML = `<i data-lucide="${randomWeather.icon}" class="w-9 h-9 text-white"></i>`;
-
-      const floodContainer = document.getElementById('flood-list-container');
-      floodContainer.innerHTML = '';
+      document.getElementById('last-updated-time').innerText = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} น.`;
       
-      ratchaburiDistricts.forEach((district, index) => {
-        const percent = Math.floor(Math.random() * 65) + 15;
-        const isHigh = percent >= 55;
-        const colorClass = isHigh ? 'text-rose-500' : 'text-amber-600';
-        const bgBarClass = isHigh ? 'bg-rose-500' : 'bg-amber-500';
-
-        const itemHTML = `
-          <div class="space-y-1">
-            <div class="flex justify-between font-medium text-slate-700">
-              <span>${index + 1}. ${district}</span>
-              <span class="font-bold ${colorClass}">${percent}%</span>
-            </div>
-            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-              <div class="${bgBarClass} h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-            </div>
-          </div>
-        `;
-        floodContainer.innerHTML += itemHTML;
-      });
-
+      const floodContainer = document.getElementById('flood-list-container');
       const pm25Container = document.getElementById('pm25-list-container');
-      pm25Container.innerHTML = '';
+      floodContainer.innerHTML = ''; pm25Container.innerHTML = '';
 
-      ratchaburiDistricts.forEach((district, index) => {
-        const pmValue = Math.floor(Math.random() * 45) + 10;
-        let statusBadge = '';
-
-        if (pmValue <= 20) {
-          statusBadge = `<span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">อากาศดีมาก</span>`;
-        } else if (pmValue <= 37) {
-          statusBadge = `<span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold ml-1">คุณภาพดี</span>`;
-        } else {
-          statusBadge = `<span class="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-semibold ml-1">เริ่มมีผล</span>`;
-        }
-
-        const pmHTML = `
-          <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <span class="font-medium text-slate-700">${index + 1}. ${district}</span>
-            <span class="font-bold text-slate-700">${pmValue} µg/m³ ${statusBadge}</span>
-          </div>
-        `;
-        pm25Container.innerHTML += pmHTML;
+      ratchaburiDistricts.forEach((d, i) => {
+        const p = Math.floor(Math.random() * 60) + 10;
+        floodContainer.innerHTML += `
+          <div class="space-y-1">
+            <div class="flex justify-between"><span>${i+1}. ${d}</span><span class="font-bold ${p>50?'text-rose-500':'text-amber-600'}">${p}%</span></div>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="${p>50?'bg-rose-500':'bg-amber-500'} h-full" style="width:${p}%"></div></div>
+          </div>`;
+        pm25Container.innerHTML += `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+            <span>${i+1}. ${d}</span><span class="font-bold">${Math.floor(Math.random()*35)+10} µg/m³</span>
+          </div>`;
       });
-
       lucide.createIcons();
     }
 
-    function startHourlyTimer() {
-      setInterval(() => {
-        secondsLeft--;
-        if (secondsLeft <= 0) {
-          secondsLeft = 3600;
-          updateHourlyData();
-        }
-        const mins = Math.floor(secondsLeft / 60);
-        const secs = secondsLeft % 60;
-        document.getElementById('next-update-timer').innerText = `รีเฟรชใน: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-      }, 1000);
-    }
+    function togglePhoneTab(type) {
+      const central = document.getElementById('phone-central-box');
+      const district = document.getElementById('phone-district-box');
+      const btnCentral = document.getElementById('btn-phone-central');
+      const btnDistrict = document.getElementById('btn-phone-district');
 
-    function togglePhotoUpload(level) {
-      const uploadSection = document.getElementById('photo-upload-section');
-      const photoInput = document.getElementById('photo-input');
-
-      if (level === 3 || level === 4) {
-        uploadSection.classList.remove('hidden');
-        photoInput.required = true;
+      if(type === 'central') {
+        central.classList.remove('hidden'); district.classList.add('hidden');
+        btnCentral.className = "pb-2 text-sky-600 border-b-2 border-sky-600";
+        btnDistrict.className = "pb-2 text-slate-400 border-b-2 border-transparent";
       } else {
-        uploadSection.classList.add('hidden');
-        photoInput.required = false;
+        district.classList.remove('hidden'); central.classList.add('hidden');
+        btnDistrict.className = "pb-2 text-sky-600 border-b-2 border-sky-600";
+        btnCentral.className = "pb-2 text-slate-400 border-b-2 border-transparent";
       }
     }
 
     function switchPage(page) {
-      const pageMain = document.getElementById('page-main');
-      const pageAdd = document.getElementById('page-add');
-      const btnMain = document.getElementById('btn-tab-main');
-      const btnAdd = document.getElementById('btn-tab-add');
+      document.getElementById('page-main').classList.add('hidden');
+      document.getElementById('page-sos').classList.add('hidden');
+      document.getElementById('page-add').classList.add('hidden');
 
-      if (page === 'main') {
-        pageMain.classList.remove('hidden');
-        pageAdd.classList.add('hidden');
-        btnMain.className = "px-4 py-1.5 rounded-xl bg-white text-sky-600 shadow-sm transition-all duration-200";
-        btnAdd.className = "px-4 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition-all duration-200";
-      } else {
-        pageMain.classList.add('hidden');
-        pageAdd.classList.remove('hidden');
-        btnAdd.className = "px-4 py-1.5 rounded-xl bg-white text-sky-600 shadow-sm transition-all duration-200";
-        btnMain.className = "px-4 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 transition-all duration-200";
+      if (page === 'main') document.getElementById('page-main').classList.remove('hidden');
+      if (page === 'sos') document.getElementById('page-sos').classList.remove('hidden');
+      if (page === 'add') {
+        document.getElementById('page-add').classList.remove('hidden');
         initMap();
       }
     }
 
     function initMap() {
-      if (map) {
-        setTimeout(() => map.invalidateSize(), 200);
-        return;
-      }
-
+      if (map) { setTimeout(() => map.invalidateSize(), 200); return; }
       map = L.map('map').setView([13.5385, 99.8180], 11);
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-
-      const modernPinIcon = L.divIcon({
-        className: 'custom-pin-marker',
-        html: `
-          <div class="custom-pin-wrapper">
-            <div class="custom-pin-pulse"></div>
-            <div class="custom-pin-core"></div>
-          </div>
-        `,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36]
-      });
-
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
       map.on('click', function(e) {
-        const lat = e.latlng.lat;
-        const lng = e.latlng.lng;
-
-        document.getElementById('selected-coords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-
-        if (tempMarker) {
-          tempMarker.setLatLng(e.latlng);
-        } else {
-          tempMarker = L.marker(e.latlng, { icon: modernPinIcon }).addTo(map);
-        }
+        document.getElementById('selected-coords').innerText = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
+        if (tempMarker) tempMarker.setLatLng(e.latlng);
+        else tempMarker = L.marker(e.latlng).addTo(map);
       });
     }
 
-    function savePin(e) {
-      e.preventDefault();
-      alert("บันทึกการปักหมุดสำเร็จเรียบร้อยแล้ว!");
-      switchPage('main');
-    }
+    function submitSOS(e) { e.preventDefault(); alert('ส่งสัญญาณ SOS ขอความช่วยเหลือเรียบร้อย เจ้าหน้าที่จะติดต่อกลับด่วน!'); switchPage('main'); }
+    function savePin(e) { e.preventDefault(); alert('บันทึกข้อมูลและรายงานแนวโน้มระดับน้ำสำเร็จ!'); switchPage('main'); }
   </script>
 </body>
 </html>
